@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TestBedz — SPRL Test Planning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.46.0/tabler-icons.min.css">
+<style>
+  :root{
+    --navy:#1C2933; --navy-deep:#10171D; --maize:#6EC9D1; --steel:#5B6B76; --steel-light:#8B9AA3;
+    --bg:#FBFBFA; --panel:#FFFFFF; --line:#E2E7E7; --success:#1E7A4C; --success-bg:#EAF5EE;
+    --warn:#B45309; --warn-bg:#FEF3E2; --danger:#B4232F; --danger-bg:#FBEAEA;
+    --font-display:'Sora',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:var(--font-body); background:var(--bg); color:var(--navy-deep); line-height:1.5; -webkit-font-smoothing:antialiased; }
+  a{color:inherit; text-decoration:none;}
+  button{ font-family:inherit; }
+  ::-webkit-scrollbar{width:10px;} ::-webkit-scrollbar-thumb{background:var(--line); border-radius:6px;}
+
+  header.topnav{ background:var(--navy); color:#fff; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; border-bottom:3px solid var(--maize); }
+  .brand{ font-family:var(--font-display); font-weight:700; font-size:20px; display:flex; align-items:baseline; gap:8px; cursor:pointer; }
+  .brand .sub{ font-family:var(--font-mono); font-size:11px; font-weight:400; color:var(--maize); letter-spacing:0.08em; text-transform:uppercase; }
+  .nav-links{ display:flex; gap:28px; align-items:center; }
+  .nav-links a{ font-size:14px; color:#D5DBE3; cursor:pointer; }
+  .nav-links a:hover{ color:#fff; }
+  .nav-cta{ display:flex; gap:12px; align-items:center; }
+  .btn-nav{ font-size:13.5px; font-weight:500; padding:9px 16px; border-radius:4px; cursor:pointer; border:1px solid rgba(255,255,255,0.3); background:transparent; color:#fff; }
+  .btn-nav.solid{ background:var(--maize); color:var(--navy-deep); border:none; font-weight:600; }
+  @media (max-width:900px){ .nav-links{ display:none; } }
+
+  .view{ display:none; } .view.active{ display:block; animation:fadeIn 0.2s ease; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+
+  .blueprint-bg{ background-color:var(--navy-deep); background-image:linear-gradient(rgba(255,255,255,0.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.045) 1px,transparent 1px); background-size:36px 36px; }
+  .hero{ padding:90px 32px 70px; color:#fff; text-align:center; }
+  .hero .eyebrow{ font-family:var(--font-mono); font-size:12px; letter-spacing:0.14em; color:var(--maize); text-transform:uppercase; margin-bottom:16px; }
+  .hero h1{ font-family:var(--font-display); font-weight:700; font-size:clamp(30px,5vw,50px); line-height:1.1; max-width:780px; margin:0 auto 18px; }
+  .hero p{ font-size:16.5px; color:#C7CFD8; max-width:580px; margin:0 auto 32px; }
+  .cta-btn{ font-weight:600; font-size:15px; background:var(--maize); color:var(--navy-deep); border:none; padding:15px 30px; border-radius:3px; cursor:pointer; }
+  .cta-btn.secondary{ background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.35); margin-left:10px; }
+
+  section.section{ padding:64px 32px; max-width:1120px; margin:0 auto; }
+  .section-head{ text-align:center; max-width:640px; margin:0 auto 40px; }
+  .section-head .eyebrow{ font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.1em; color:var(--steel-light); text-transform:uppercase; margin-bottom:10px; }
+  .section-head h2{ font-family:var(--font-display); font-size:28px; font-weight:700; margin-bottom:10px; }
+  .section-head p{ color:var(--steel); font-size:14.5px; }
+
+  .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .grid-5{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+  @media (max-width:1000px){ .grid-5{ grid-template-columns:repeat(3,1fr);} .grid-3{grid-template-columns:1fr 1fr;} }
+  @media (max-width:600px){ .grid-5{ grid-template-columns:1fr 1fr;} .grid-3{grid-template-columns:1fr;} }
+
+  .facility-card{ background:#fff; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+  .facility-card img{ width:100%; height:120px; object-fit:cover; display:block; background:#eee; }
+  .facility-card .body{ padding:14px 16px; }
+  .facility-card .name{ font-family:var(--font-display); font-weight:600; font-size:14px; margin-bottom:6px; }
+  .facility-card .spec{ font-family:var(--font-mono); font-size:10.5px; color:var(--steel); line-height:1.6; }
+
+  .brochure-item{ display:grid; grid-template-columns:380px 1fr; background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:22px; }
+  .brochure-item.reverse{ grid-template-columns:1fr 380px; }
+  .brochure-item.reverse .brochure-img{ order:2; }
+  .brochure-img{ min-height:230px; background:#EFEFEF; }
+  .brochure-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .brochure-body{ padding:28px 32px; display:flex; flex-direction:column; justify-content:center; }
+  .brochure-body .model{ font-family:var(--font-mono); font-size:11px; color:var(--steel-light); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px; }
+  .brochure-body h3{ font-family:var(--font-display); font-size:20px; margin-bottom:10px; }
+  .brochure-body p.blurb{ color:var(--steel); font-size:14px; margin-bottom:18px; }
+  .brochure-specs{ display:grid; grid-template-columns:1fr 1fr; gap:10px 22px; }
+  .brochure-specs .spec-row .k{ color:var(--steel-light); font-family:var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:2px; }
+  .brochure-specs .spec-row .v{ font-weight:500; font-size:13px; }
+  @media (max-width:760px){ .brochure-item,.brochure-item.reverse{ grid-template-columns:1fr; } .brochure-img{ min-height:190px; } }
+
+  .faq-item{ border-bottom:1px solid var(--line); padding:18px 0; cursor:pointer; }
+  .faq-item .q{ display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:15px; }
+  .faq-item .q .arrow{ font-family:var(--font-mono); color:var(--steel-light); transition:transform 0.15s; }
+  .faq-item.open .q .arrow{ transform:rotate(45deg); }
+  .faq-item .a{ display:none; color:var(--steel); font-size:14px; margin-top:12px; max-width:760px; }
+  .faq-item.open .a{ display:block; }
+
+  footer.site-footer{ background:var(--navy-deep); color:#8FA0B5; text-align:center; padding:28px; font-size:12.5px; }
+  footer.site-footer a{ color:#B9C2CE; text-decoration:underline; cursor:pointer; }
+
+  main.narrow{ max-width:740px; margin:0 auto; padding:56px 24px 100px; }
+  main.wide{ max-width:1060px; margin:0 auto; padding:40px 24px 100px; }
+
+  .panel-title{ font-family:var(--font-display); font-weight:700; font-size:24px; margin-bottom:6px; }
+  .panel-sub{ color:var(--steel); font-size:14px; margin-bottom:26px; }
+  .subsection-count{ font-family:var(--font-mono); font-size:11px; color:var(--steel-light); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; }
+
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:26px; margin-bottom:18px; }
+  .card h3.card-head{ font-family:var(--font-display); font-size:15.5px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+
+  .field{ margin-bottom:19px; } .field:last-child{ margin-bottom:0; }
+  .field label{ display:block; font-size:13px; font-weight:600; margin-bottom:7px; }
+  .field .hint{ font-size:12px; color:var(--steel-light); margin-top:5px; line-height:1.5; }
+  input[type="text"],input[type="number"],input[type="email"],input[type="password"],input[type="date"],textarea,select{
+    width:100%; font-family:var(--font-body); font-size:14px; padding:10px 12px; border:1px solid var(--line); border-radius:4px; background:#FCFCFB; color:var(--navy-deep);
+  }
+  input[type="file"]{ width:100%; font-size:13px; padding:9px 0; }
+  input:focus, textarea:focus, select:focus{ outline:none; border-color:var(--navy); box-shadow:0 0 0 3px rgba(0,38,77,0.08); }
+  textarea{ min-height:68px; resize:vertical; }
+
+  .radio-group,.checkbox-group{ display:flex; flex-wrap:wrap; gap:9px; }
+  .radio-option{ border:1px solid var(--line); border-radius:4px; padding:9px 13px; font-size:13px; cursor:pointer; background:#FCFCFB; user-select:none; }
+  .radio-option.selected{ border-color:var(--navy); background:var(--navy); color:#fff; font-weight:500; }
+  .ack-box{ display:flex; gap:12px; align-items:flex-start; background:var(--warn-bg); border:1px solid #F0D9B5; border-radius:6px; padding:16px 18px; }
+  .ack-box input{ width:auto; margin-top:3px; }
+  .ack-box label{ font-size:13px; color:#6B4A16; font-weight:500; line-height:1.5; }
+
+  .row-2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .row-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  @media (max-width:600px){ .row-2,.row-3{ grid-template-columns:1fr; } }
+
+  .actions{ display:flex; justify-content:space-between; align-items:center; margin-top:24px; }
+  .btn-primary{ font-weight:600; font-size:14px; background:var(--navy); color:#fff; border:none; padding:12px 24px; border-radius:4px; cursor:pointer; }
+  .btn-primary:hover{ background:var(--navy-deep); }
+  .btn-ghost{ font-weight:500; font-size:13.5px; background:none; border:none; color:var(--steel); cursor:pointer; padding:10px 4px; }
+  .btn-ghost:hover{ color:var(--navy); }
+  .btn-small{ font-size:12.5px; font-weight:600; background:var(--navy); color:#fff; border:none; padding:8px 14px; border-radius:4px; cursor:pointer; }
+
+  .stepper{ display:flex; align-items:center; margin-bottom:36px; font-family:var(--font-mono); }
+  .step{ display:flex; align-items:center; gap:9px; flex:1; }
+  .step .dot{ width:24px; height:24px; border-radius:50%; border:2px solid var(--line); background:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--steel-light); flex-shrink:0; }
+  .step .label{ font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--steel-light); }
+  .step .connector{ height:2px; flex:1; background:var(--line); margin:0 4px; }
+  .step.active .dot{ border-color:var(--navy); background:var(--navy); color:#fff; }
+  .step.active .label{ color:var(--navy); font-weight:600; }
+  .step.done .dot{ border-color:var(--success); background:var(--success); color:#fff; }
+  .step.done .label{ color:var(--success); }
+  .step.done .connector{ background:var(--success); }
+  .step:last-child .connector{ display:none; }
+  .step-view{ display:none; }
+
+  .dash-header{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:28px; flex-wrap:wrap; gap:14px; }
+  .dash-tabs{ display:flex; gap:6px; border-bottom:1px solid var(--line); margin-bottom:24px; flex-wrap:wrap; }
+  .dash-tab{ padding:10px 16px; font-size:13.5px; font-weight:500; color:var(--steel); cursor:pointer; border-bottom:2px solid transparent; }
+  .dash-tab.active{ color:var(--navy); border-bottom-color:var(--navy); font-weight:600; }
+
+  .campaign-card{ background:#fff; border:1px solid var(--line); border-radius:6px; padding:20px 22px; margin-bottom:12px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+  .campaign-card:hover{ border-color:var(--steel-light); }
+  .campaign-card .name{ font-family:var(--font-display); font-weight:600; font-size:16px; margin-bottom:4px; }
+  .campaign-card .meta{ font-size:12.5px; color:var(--steel-light); font-family:var(--font-mono); }
+  .status-pill{ font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.05em; padding:5px 11px; border-radius:20px; font-weight:600; white-space:nowrap; }
+  .status-pill.submitted{ background:#EEF1FF; color:#3B4FBF; }
+  .status-pill.review{ background:var(--warn-bg); color:var(--warn); }
+  .status-pill.matched{ background:var(--success-bg); color:var(--success); }
+  .status-pill.scheduled{ background:#E4F3F9; color:#0E6E8C; }
+  .status-pill.complete{ background:#EFEFEF; color:#555; }
+
+  .empty-state{ text-align:center; padding:60px 20px; color:var(--steel-light); }
+  .empty-state .icon{ font-size:36px; margin-bottom:12px; }
+
+  .test-row{ background:#fff; border:1px solid var(--line); border-radius:6px; padding:16px 20px; margin-bottom:10px; }
+  .test-row .ttype{ font-family:var(--font-display); font-weight:600; font-size:14.5px; }
+  .test-row .tmeta{ font-size:12px; color:var(--steel-light); font-family:var(--font-mono); margin-top:3px; }
+
+  table.admin-table{ width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); border-radius:6px; overflow:hidden; }
+  table.admin-table th{ text-align:left; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--steel-light); padding:12px 16px; border-bottom:1px solid var(--line); background:#FAFAF9; }
+  table.admin-table td{ padding:14px 16px; border-bottom:1px solid var(--line); font-size:13.5px; cursor:pointer; }
+  table.admin-table tr:hover td{ background:#FAFAF9; }
+  table.admin-table tr:last-child td{ border-bottom:none; }
+
+  .back-link{ font-size:13px; color:var(--steel); cursor:pointer; margin-bottom:18px; display:inline-block; }
+  .back-link:hover{ color:var(--navy); }
+
+  .demo-banner{ background:var(--warn-bg); color:var(--warn); font-family:var(--font-mono); font-size:11.5px; text-align:center; padding:8px; border-bottom:1px solid #F0D9B5; }
+
+  /* ticket / updates feed */
+  .ticket-id{ font-family:var(--font-mono); font-size:12px; color:var(--steel-light); }
+  .update-feed{ display:flex; flex-direction:column; gap:10px; }
+  .update-item{ background:#fff; border:1px solid var(--line); border-radius:6px; padding:14px 16px; }
+  .update-item .meta{ font-family:var(--font-mono); font-size:10.5px; color:var(--steel-light); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px; }
+  .update-item .note{ font-size:13.5px; }
+  .post-update-row{ display:flex; gap:10px; margin-top:14px; }
+  .post-update-row textarea{ flex:1; min-height:44px; }
+
+  /* calendar */
+  .cal-wrap{ background:#fff; border:1px solid var(--line); border-radius:6px; padding:22px; }
+  .cal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .cal-head .title{ font-family:var(--font-display); font-weight:600; font-size:15px; }
+  .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .cal-dow{ font-family:var(--font-mono); font-size:10px; color:var(--steel-light); text-align:center; text-transform:uppercase; padding-bottom:4px; }
+  .cal-day{ aspect-ratio:1; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:12.5px; font-family:var(--font-mono); }
+  .cal-day.blank{ background:transparent; }
+  .cal-day.available{ background:var(--success-bg); color:var(--success); }
+  .cal-day.booked{ background:var(--danger-bg); color:var(--danger); }
+  .cal-legend{ display:flex; gap:18px; margin-top:14px; font-size:12px; color:var(--steel); align-items:center; }
+  .cal-legend .dot{ width:10px; height:10px; border-radius:2px; display:inline-block; margin-right:6px; }
+  .cal-note{ font-size:11.5px; color:var(--steel-light); margin-top:10px; }
+
+  /* budget estimator */
+  .estimate-box{ background:var(--success-bg); border:1px solid #BFE3CD; border-radius:6px; padding:18px 20px; }
+  .estimate-box .amount{ font-family:var(--font-display); font-size:26px; font-weight:700; color:var(--success); }
+  .estimate-box .label{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--success); margin-bottom:4px; }
+  .estimate-box .disclaimer{ font-size:11.5px; color:var(--steel); margin-top:10px; }
+
+  .info-block{ background:#EEF1FF; border:1px solid #D6DCFA; border-radius:6px; padding:14px 18px; font-size:12.5px; color:#33407A; }
+  .info-block a{ text-decoration:underline; font-weight:600; }
+
+  @media print{
+    header.topnav,.stepper,.actions,.demo-banner,.dash-tabs{ display:none !important; }
+    body{ background:#fff; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-banner">DEMO MODE — data resets on page refresh, no real accounts or file uploads are stored</div>
+
+<header class="topnav">
+  <div class="brand" onclick="nav('home')">TestBedz <span class="sub">SPRL Test Platform</span></div>
+  <div class="nav-links">
+    <a onclick="nav('home')"><i class="ti ti-home" style="font-size:15px; margin-right:6px; vertical-align:-2px;"></i>Home</a>
+    <a onclick="nav('home'); scrollToId('facilities')"><i class="ti ti-building-factory-2" style="font-size:15px; margin-right:6px; vertical-align:-2px;"></i>Facilities</a>
+    <a onclick="nav('home'); scrollToId('faq')"><i class="ti ti-help-circle" style="font-size:15px; margin-right:6px; vertical-align:-2px;"></i>FAQ</a>
+  </div>
+  <div class="nav-cta" id="nav-cta"></div>
+</header>
+
+<!-- ============ HOME ============ -->
+<div id="view-home" class="view active">
+  <section class="blueprint-bg hero">
+    <div class="eyebrow">SPRL Environmental Test Facilities</div>
+    <h1>Your end-to-end aerospace testing partner.</h1>
+    <p>Vibration, thermal, and vacuum testing on SPRL's own equipment — request, track, and manage your full test campaign in one place.</p>
+    <button class="cta-btn" onclick="nav('wizard')">Create your test campaign →</button>
+  </section>
+
+  <section class="section" id="facilities">
+    <div class="section-head">
+      <div class="eyebrow">Testing Facilities</div>
+      <h2>Five in-house facilities, one location</h2>
+      <p>Climate and Space Research Building (CSRB), University of Michigan. Every facility below is staffed by a qualified SPRL operator.</p>
+    </div>
+    <div id="brochure-list"></div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="section-head">
+      <div class="eyebrow">FAQ</div>
+      <h2>Frequently asked questions</h2>
+    </div>
+    <div id="faq-list" style="max-width:760px; margin:0 auto;"></div>
+  </section>
+
+  <footer class="site-footer">
+    TestBedz · Space Physics Research Lab · University of Michigan &nbsp;·&nbsp; <a onclick="nav('admin-login')">Staff Login</a>
+  </footer>
+</div>
+
+<!-- ============ CUSTOMER LOGIN ============ -->
+<div id="view-login" class="view">
+  <main class="narrow">
+    <div class="panel-title">Log in</div>
+    <div class="panel-sub">Access your test campaigns.</div>
+    <div class="card">
+      <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="you@company.com"></div>
+      <div class="field"><label>Password</label><input type="password" id="login-password" placeholder="••••••••"></div>
+    </div>
+    <div class="actions">
+      <span class="btn-ghost" onclick="nav('wizard')">Need an account? Start a campaign →</span>
+      <button class="btn-primary" onclick="doLogin()">Log in</button>
+    </div>
+  </main>
+</div>
+
+<!-- ============ WIZARD ============ -->
+<div id="view-wizard" class="view">
+  <main class="narrow">
+    <div class="stepper" id="wizard-stepper">
+      <div class="step" data-step="1"><div class="dot">1</div><div class="label">General Intake</div><div class="connector"></div></div>
+      <div class="step" data-step="2"><div class="dot">2</div><div class="label">Facility Details</div><div class="connector"></div></div>
+      <div class="step" data-step="3"><div class="dot">3</div><div class="label">Account</div></div>
+    </div>
+    <div id="wizard-body"></div>
+  </main>
+</div>
+
+<!-- ============ CUSTOMER DASHBOARD ============ -->
+<div id="view-dashboard" class="view">
+  <main class="wide">
+    <div class="dash-header">
+      <div><div class="panel-title" style="margin-bottom:2px;">Your test campaigns</div><div class="panel-sub" style="margin-bottom:0;" id="dash-welcome">—</div></div>
+      <button class="btn-primary" onclick="nav('wizard')">+ New campaign</button>
+    </div>
+    <div id="campaign-list"></div>
+  </main>
+</div>
+
+<!-- ============ CAMPAIGN DETAIL (customer) ============ -->
+<div id="view-campaign-detail" class="view">
+  <main class="wide">
+    <span class="back-link" onclick="nav('dashboard')">← Back to all campaigns</span>
+    <div class="dash-header">
+      <div>
+        <div class="panel-title" style="margin-bottom:2px;" id="cd-title">—</div>
+        <div class="ticket-id" id="cd-ticket">—</div>
+      </div>
+      <span class="status-pill" id="cd-status">—</span>
+    </div>
+    <div class="dash-tabs">
+      <div class="dash-tab active" data-tab="tests" onclick="switchCampaignTab('tests')"><i class="ti ti-clipboard-list" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Tests</div>
+      <div class="dash-tab" data-tab="updates" onclick="switchCampaignTab('updates')"><i class="ti ti-message-circle" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Updates</div>
+      <div class="dash-tab" data-tab="calendar" onclick="switchCampaignTab('calendar')"><i class="ti ti-calendar" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Facility Calendar</div>
+      <div class="dash-tab" data-tab="budget" onclick="switchCampaignTab('budget')"><i class="ti ti-currency-dollar" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Budget Estimate</div>
+    </div>
+    <div id="cd-tab-tests"><div id="cd-test-list"></div></div>
+    <div id="cd-tab-updates" style="display:none;"><div class="update-feed" id="cd-update-feed"></div></div>
+    <div id="cd-tab-calendar" style="display:none;"><div id="cd-calendar"></div></div>
+    <div id="cd-tab-budget" style="display:none;"><div id="cd-budget"></div></div>
+  </main>
+</div>
+
+<!-- ============ ADMIN LOGIN ============ -->
+<div id="view-admin-login" class="view">
+  <main class="narrow">
+    <div class="panel-title">Staff login</div>
+    <div class="panel-sub">SPRL internal access.</div>
+    <div class="card">
+      <div class="field"><label>Staff email</label><input type="email" id="admin-email" placeholder="staff@umich.edu"></div>
+      <div class="field"><label>Password</label><input type="password" id="admin-password" placeholder="••••••••"></div>
+    </div>
+    <div class="actions"><span class="btn-ghost" onclick="nav('home')">← Back to site</span><button class="btn-primary" onclick="doAdminLogin()">Log in</button></div>
+  </main>
+</div>
+
+<!-- ============ ADMIN DASHBOARD ============ -->
+<div id="view-admin-dashboard" class="view">
+  <main class="wide">
+    <div class="dash-header">
+      <div><div class="panel-title" style="margin-bottom:2px;">All campaigns</div><div class="panel-sub" style="margin-bottom:0;">Every campaign submitted across all customers.</div></div>
+      <button class="btn-ghost" onclick="nav('home')">Log out</button>
+    </div>
+    <div id="admin-campaign-table-wrap"></div>
+  </main>
+</div>
+
+<!-- ============ ADMIN CAMPAIGN DETAIL ============ -->
+<div id="view-admin-campaign-detail" class="view">
+  <main class="wide">
+    <span class="back-link" onclick="nav('admin-dashboard')">← Back to all campaigns</span>
+    <div class="dash-header">
+      <div>
+        <div class="panel-title" style="margin-bottom:2px;" id="acd-title">—</div>
+        <div class="ticket-id" id="acd-ticket">—</div>
+      </div>
+      <div class="field" style="margin:0; width:200px;">
+        <label style="font-size:11px;">Update status</label>
+        <select id="acd-status-select" onchange="updateAdminStatus()">
+          <option value="submitted">Submitted</option>
+          <option value="review">Under Review</option>
+          <option value="matched">Matched to Facility</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="complete">Complete</option>
+        </select>
+      </div>
+    </div>
+    <div class="card" id="acd-info-card"></div>
+    <div class="dash-tabs">
+      <div class="dash-tab active" data-tab="tests" onclick="switchAdminTab('tests')"><i class="ti ti-clipboard-list" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Tests</div>
+      <div class="dash-tab" data-tab="updates" onclick="switchAdminTab('updates')"><i class="ti ti-message-circle" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Updates</div>
+      <div class="dash-tab" data-tab="calendar" onclick="switchAdminTab('calendar')"><i class="ti ti-calendar" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Facility Calendar</div>
+    </div>
+    <div id="acd-tab-tests"><div id="acd-test-list"></div></div>
+    <div id="acd-tab-updates" style="display:none;">
+      <div class="update-feed" id="acd-update-feed"></div>
+      <div class="post-update-row"><textarea id="acd-new-update" placeholder="Post an update for the customer..."></textarea><button class="btn-small" onclick="postAdminUpdate()">Post</button></div>
+    </div>
+    <div id="acd-tab-calendar" style="display:none;"><div id="acd-calendar"></div></div>
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   REAL FACILITY DATA — from SPRL Environmental Testing Capabilities
+   ============================================================ */
+const FACILITIES = {
+  "large-vib": {
+    name:"Large Vibration Table", model:"Unholtz Dickie 560", image:"images/large-vibration-table.jpg", icon:"ti-activity",
+    blurb:"Simulates vibration loads such as those from a rocket launch. Suited for larger or heavier test articles.",
+    specs:{ "Displacement":"1 inch peak-to-peak", "Frequency Range":"5 Hz – 2,000 Hz", "Force Rating":"6,500 lbf sine peak · 5,700 lbf random RMS", "Max Velocity":"65 in/sec" },
+    dayRate: 500,
+    fields:[
+      { id:"weight", label:"Test article weight, including any fixture (lbs)", type:"number" },
+      { id:"dims", label:"Test article dimensions (L x W x H)", type:"text" },
+      { id:"profile", label:"Type of vibration profile needed", type:"checkbox", options:["Sine sweep","Random vibration","Shock","Not sure — need guidance"] },
+      { id:"freqforce", label:"Specific frequency range and force levels required, if known", type:"textarea" },
+      { id:"mounting", label:"Mounting interface", type:"radio", options:["Existing fixture (attach drawing above)","Needs fixture fabricated","Not sure"] },
+      { id:"instrumented", label:"Will the test article be powered or instrumented during the test?", type:"radio", options:["Yes","No"] },
+      { id:"instrumented_desc", label:"Describe the instrumentation or data needs", type:"textarea", showIf:{field:"instrumented", equals:"Yes"} },
+      { id:"fragile", label:"Any fragile or sensitive components SPRL should be aware of?", type:"textarea" },
+      { id:"accelerometers", label:"External accelerometer channels needed", type:"text", hint:"SPRL has a limited number of channels available — confirm your count early." },
+      { id:"purpose", label:"Purpose of this test", type:"radio", options:["Data correlation","Survival test","Both"] },
+      { id:"hazard", label:"If the test article were to break, could that create a hazard (e.g. hazardous material)?", type:"radio", options:["Yes","No"] },
+      { id:"hazard_desc", label:"Describe the hazard", type:"textarea", showIf:{field:"hazard", equals:"Yes"} }
+    ]
+  },
+  "small-vib": {
+    name:"Small Vibration Table", model:"Unholtz Dickie 206C", image:"images/small-vibration-table.jpg", icon:"ti-pulse",
+    blurb:"Simulates vibration loads such as from a rocket launch. Suited for smaller, lighter test articles.",
+    specs:{ "Displacement":"1 inch peak-to-peak", "Frequency Range":"5 Hz – 2,000 Hz", "Force Rating":"1,700 lbf sine peak · 1,350 lbf random RMS", "Max Velocity":"59 in/sec", "Max Free Table Accel.":"61 g", "Slip-Table":"18\" × 25\" magnesium · 68 lbs max moving mass" },
+    dayRate: 350,
+    fields:[
+      { id:"weight", label:"Test article weight, including any fixture (lbs)", type:"number", hint:"Must not exceed the 68 lb max moving mass of the slip-table." },
+      { id:"dims", label:"Test article dimensions (L x W x H)", type:"text" },
+      { id:"profile", label:"Type of vibration profile needed", type:"checkbox", options:["Sine sweep","Random vibration","Shock","Not sure — need guidance"] },
+      { id:"freqforce", label:"Specific frequency range and force levels required, if known", type:"textarea" },
+      { id:"mounting", label:"Mounting interface", type:"radio", options:["Existing fixture (attach drawing above)","Needs fixture fabricated","Not sure"] },
+      { id:"instrumented", label:"Will the test article be powered or instrumented during the test?", type:"radio", options:["Yes","No"] },
+      { id:"instrumented_desc", label:"Describe the instrumentation or data needs", type:"textarea", showIf:{field:"instrumented", equals:"Yes"} },
+      { id:"fragile", label:"Any fragile or sensitive components SPRL should be aware of?", type:"textarea" },
+      { id:"accelerometers", label:"External accelerometer channels needed", type:"text", hint:"SPRL has a limited number of channels available — confirm your count early." },
+      { id:"purpose", label:"Purpose of this test", type:"radio", options:["Data correlation","Survival test","Both"] },
+      { id:"hazard", label:"If the test article were to break, could that create a hazard (e.g. hazardous material)?", type:"radio", options:["Yes","No"] },
+      { id:"hazard_desc", label:"Describe the hazard", type:"textarea", showIf:{field:"hazard", equals:"Yes"} }
+    ]
+  },
+  "blue-tvac": {
+    name:"Blue Thermal Vacuum Chamber", model:"Bemco A6H-55/150C-28", image:"images/blue-tvac.jpg", icon:"ti-atom-2",
+    blurb:"Simulates the upper atmosphere or outer space, combining vacuum conditions with a wide temperature range.",
+    specs:{ "Temperature Range":"−55°C to +150°C", "Shroud Size":"36\" dia × 48\" long", "Base Pressure":"< 5×10⁻⁶ torr", "Platen Size":"18\" × 48\"" },
+    dayRate: 600,
+    fields:[
+      { id:"dims", label:"Test article dimensions (L x W x H)", type:"text", hint:"Must fit within the 36\" diameter shroud and 18\"×48\" platen." },
+      { id:"temprange", label:"Required temperature range for this test (°C)", type:"text", hint:"Must be within −55°C to +150°C." },
+      { id:"rampholds", label:"Required ramp rate or hold times, if known", type:"textarea" },
+      { id:"vacuumlevel", label:"Required vacuum level", type:"text", hint:"Must be at or beyond 5×10⁻⁶ torr." },
+      { id:"feedthroughs", label:"Will the test article need power, monitoring, or cabling through the chamber wall (feedthroughs)?", type:"radio", options:["Yes","No"] },
+      { id:"feedthroughs_desc", label:"Describe the cabling / feedthrough needs", type:"textarea", showIf:{field:"feedthroughs", equals:"Yes"} },
+      { id:"materials", label:"Materials list — flag any materials of concern for outgassing or contamination", type:"textarea" },
+      { id:"vacuum_compatible", label:"Are all listed materials vacuum-compatible?", type:"radio", options:["Yes","No","Not sure"] },
+      { id:"support247", label:"Do you need 24/7 support during this test?", type:"radio", options:["Yes","No"] }
+    ]
+  },
+  "silver-vac": {
+    name:"Silver Vacuum Chamber", model:"Silver Vacuum Chamber", image:"images/silver-vacuum-chamber.jpg", icon:"ti-snowflake",
+    blurb:"Primarily used to simulate the vacuum of space, with the added capability to cool the platen directly with liquid nitrogen for cryogenic testing.",
+    specs:{ "Cooling":"Direct LN2 cooling (77K / −196°C)", "Interior Size":"36\" dia × 48\" long", "Base Pressure":"< 5×10⁻⁶ torr", "Pump Type":"Turbopump" },
+    dayRate: 550,
+    fields:[
+      { id:"dims", label:"Test article dimensions (L x W x H)", type:"text", hint:"Must fit within the 36\" diameter × 48\" interior." },
+      { id:"cryo", label:"Do you require liquid nitrogen (cryogenic) cooling for this test?", type:"radio", options:["Yes","No"] },
+      { id:"cryo_temp", label:"Target temperature", type:"text", showIf:{field:"cryo", equals:"Yes"} },
+      { id:"vacuumlevel", label:"Required vacuum level", type:"text", hint:"Must be at or beyond 5×10⁻⁶ torr." },
+      { id:"feedthroughs", label:"Will the test article need power, monitoring, or cabling through the chamber wall (feedthroughs)?", type:"radio", options:["Yes","No"] },
+      { id:"feedthroughs_desc", label:"Describe the cabling / feedthrough needs", type:"textarea", showIf:{field:"feedthroughs", equals:"Yes"} },
+      { id:"materials", label:"Materials list — flag any materials of concern for outgassing or contamination", type:"textarea" },
+      { id:"vacuum_compatible", label:"Are all listed materials vacuum-compatible?", type:"radio", options:["Yes","No","Not sure"] },
+      { id:"support247", label:"Do you need 24/7 support during this test?", type:"radio", options:["Yes","No"] }
+    ]
+  },
+  "cincinnati": {
+    name:"Cincinnati Sub-Zero Thermal Chamber", model:"ZP-32.5-SCT/AC", image:"images/cincinnati-sub-zero.jpg", icon:"ti-thermometer",
+    blurb:"Provides a wide temperature range for testing hardware at ambient (non-vacuum) pressure. Can be purged with dry nitrogen.",
+    specs:{ "Pressure":"Ambient (dry N2 purge available)", "Max Internal Dimensions":"30\" × 30\" × 30\"", "Temperature Range":"−45°C to +190°C", "Profiles":"Programmable" },
+    dayRate: 400,
+    fields:[
+      { id:"dims", label:"Test article dimensions (L x W x H)", type:"text", hint:"Must fit within 30\"×30\"×30\"." },
+      { id:"temprange", label:"Required temperature range for this test (°C)", type:"text", hint:"Must be within −45°C to +190°C." },
+      { id:"purge", label:"Do you need a dry nitrogen purge for this test?", type:"radio", options:["Yes","No","Not sure"] },
+      { id:"profile", label:"Required temperature profile (ramp rates, hold times, number of cycles)", type:"textarea" },
+      { id:"powered", label:"Will the test article be powered or monitored during the test?", type:"radio", options:["Yes","No"] },
+      { id:"powered_desc", label:"Describe the instrumentation needs", type:"textarea", showIf:{field:"powered", equals:"Yes"} }
+    ]
+  }
+};
+const FACILITY_LABELS_TO_KEY = {
+  "Large Vibration Table":"large-vib", "Small Vibration Table":"small-vib",
+  "Blue Thermal Vacuum Chamber":"blue-tvac", "Silver Vacuum Chamber":"silver-vac",
+  "Cincinnati Sub-Zero Thermal Chamber":"cincinnati"
+};
+
+/* ============================================================
+   GENERAL INTAKE — Section 1, split into sub-sections
+   ============================================================ */
+const GENERAL_SECTIONS = [
+  { title:"Organization & Contact", fields:[
+    { id:"org_name", label:"Company / organization name", type:"text" },
+    { id:"contact_name", label:"Primary contact name", type:"text" },
+    { id:"contact_email", label:"Primary contact email", type:"email" },
+    { id:"contact_phone", label:"Primary contact phone", type:"text" },
+    { id:"requester_type", label:"Is this request from a UM-affiliated team/department, an external academic institution, or an external company?", type:"radio", options:["UM-affiliated team/department","External academic institution","External company"] },
+    { id:"shortcode", label:"UM short code", type:"text", showIf:{field:"requester_type", equals:"UM-affiliated team/department"} }
+  ]},
+  { title:"Compliance & Legal", fields:[
+    { id:"itar", label:"Is this hardware or program subject to ITAR or other export control restrictions?", type:"radio", options:["Yes","No","Not sure"] },
+    { id:"nda", label:"Do you require a signed NDA before sharing technical details?", type:"radio", options:["Yes","No"] },
+    { id:"nda_signatory", label:"Designated NDA signatory (name, email)", type:"text", showIf:{field:"nda", equals:"Yes"} }
+  ]},
+  { title:"What You Need Tested", fields:[
+    { id:"facilities", label:"Which facility/test are you requesting?", type:"checkbox", options:["Large Vibration Table","Small Vibration Table","Blue Thermal Vacuum Chamber","Silver Vacuum Chamber","Cincinnati Sub-Zero Thermal Chamber","Not sure — help me choose"] },
+    { id:"description", label:"Brief description of the test article and test objective", type:"textarea", placeholder:"e.g. Vibration qualification of a 12 lb CubeSat structure prior to launch" },
+    { id:"drawing", label:"Upload a drawing of the test article (required)", type:"file", hint:"Accepts PDF, STEP, DWG." },
+    { id:"supporting_docs", label:"Upload supporting documents (test plan, prior reports, interface control documents)", type:"file", hint:"Optional, multiple files.", multiple:true },
+    { id:"materials", label:"List of materials used in the test article (and any materials that must NOT be used or exposed)", type:"textarea" },
+    { id:"pressure_vessels", label:"Does the test article contain any pressure vessels?", type:"radio", options:["Yes","No"] },
+    { id:"cables_needed", label:"Do any cables, fixtures, or custom interface hardware need to be fabricated for this test?", type:"radio", options:["Yes","No"] },
+    { id:"cables_desc", label:"Describe the interface or cable needed", type:"textarea", showIf:{field:"cables_needed", equals:"Yes"} }
+  ]},
+  { title:"Schedule & Budget", fields:[
+    { id:"date_start", label:"Preferred test start date", type:"date" },
+    { id:"date_end", label:"Preferred test end date (if a range)", type:"date" },
+    { id:"flexible", label:"Is this date flexible?", type:"radio", options:["Yes, flexible","No, fixed deadline"] },
+    { id:"fixed_reason", label:"Why is this date fixed?", type:"textarea", showIf:{field:"flexible", equals:"No, fixed deadline"} },
+    { id:"duration", label:"Estimated test duration", type:"select", options:["< 1 day","1–2 days","3–5 days","More than a week","Not sure"] },
+    { id:"budget", label:"Maximum budget available for this test (USD)", type:"number", hint:"Optional — helps SPRL scope the request realistically." },
+    { id:"support247", label:"Would you need 24/7 facility access or support?", type:"radio", options:["Yes","No","Not sure"] }
+  ]},
+  { title:"Review Process", fields:[
+    { id:"reviews", label:"Which reviews, if any, has this test article already completed?", type:"checkbox", options:["Manufacturing Review","Test Readiness Review","Engineering Review","None yet","Not sure"] }
+  ]}
+];
+
+const FAQ_ITEMS = [
+  { q:"What kind of testing services do you offer?", a:"SPRL's own facilities handle Vibration (large and small tables), Thermal Vacuum (Blue TVAC and Silver Vacuum Chamber), and ambient-pressure Thermal cycling (Cincinnati Sub-Zero). We act as your single point of contact throughout." },
+  { q:"How does the process work?", a:"1) You submit a test campaign request through the platform. 2) SPRL reviews your requirements against facility specs. 3) We confirm scheduling and any fixture or feedthrough needs. 4) You track progress through your dashboard. 5) Testing is completed and results are shared." },
+  { q:"Do I need an NDA or ITAR review before sharing details?", a:"If your hardware is subject to ITAR or other export controls, flag that during intake so SPRL can route your request appropriately. If you need a signed NDA before sharing technical details, you can request one as part of your submission." },
+  { q:"Is there a standard reference for test levels?", a:"Many customers reference NASA's General Environmental Verification Standard (GEVS, GSFC-STD-7000) when specifying test levels. You're welcome to cite it in your submission if it applies to your program." }
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let session = { role:null, email:null, name:null };
+let campaigns = [];
+let campaignCounter = 1;
+let generalAnswers = {};
+let selectedFacilityKeys = [];
+let facilityAnswers = {};
+let currentSubSection = 0;
+let currentCampaignId = null;
+
+/* ============================================================
+   GENERIC FIELD RENDERER (used by general intake + facility forms)
+   ============================================================ */
+function renderField(f, storeGetter){
+  const stored = storeGetter()[f.id];
+  let html = '';
+  if(f.type === 'text' || f.type === 'email' || f.type === 'number' || f.type === 'date'){
+    html = `<input type="${f.type}" data-fid="${f.id}" placeholder="${f.placeholder||''}">`;
+  } else if(f.type === 'file'){
+    html = `<input type="file" data-fid="${f.id}" ${f.multiple ? 'multiple' : ''}>`;
+  } else if(f.type === 'textarea'){
+    html = `<textarea data-fid="${f.id}" placeholder="${f.placeholder||''}"></textarea>`;
+  } else if(f.type === 'select'){
+    html = `<select data-fid="${f.id}"><option value="">Select...</option>${f.options.map(o=>`<option>${o}</option>`).join('')}</select>`;
+  } else if(f.type === 'radio'){
+    html = `<div class="radio-group" data-fid="${f.id}">${f.options.map(o=>`<div class="radio-option" data-value="${o}">${o}</div>`).join('')}</div>`;
+  } else if(f.type === 'checkbox'){
+    html = `<div class="checkbox-group" data-fid="${f.id}" data-multi="true">${f.options.map(o=>`<div class="radio-option" data-value="${o}">${o}</div>`).join('')}</div>`;
+  }
+  const showIfAttr = f.showIf ? `data-showif-field="${f.showIf.field}" data-showif-equals="${f.showIf.equals}"` : '';
+  return `<div class="field" data-fieldwrap="${f.id}" ${showIfAttr} style="${f.showIf ? 'display:none;' : ''}">
+    <label>${f.label}</label>${html}${f.hint ? `<div class="hint">${f.hint}</div>` : ''}
+  </div>`;
+}
+
+function wireFieldGroup(containerEl){
+  containerEl.querySelectorAll('.radio-group, .checkbox-group').forEach(group => {
+    group.addEventListener('click', (e) => {
+      const opt = e.target.closest('.radio-option');
+      if(!opt) return;
+      if(group.dataset.multi === 'true'){ opt.classList.toggle('selected'); }
+      else{ group.querySelectorAll('.radio-option').forEach(o=>o.classList.remove('selected')); opt.classList.add('selected'); }
+      applyConditionalVisibility(containerEl);
+    });
+  });
+  containerEl.querySelectorAll('select, input').forEach(el => {
+    el.addEventListener('change', () => applyConditionalVisibility(containerEl));
+  });
+}
+
+function applyConditionalVisibility(containerEl){
+  containerEl.querySelectorAll('[data-showif-field]').forEach(wrap => {
+    const targetField = wrap.dataset.showifField;
+    const targetValue = wrap.dataset.showifEquals;
+    const control = containerEl.querySelector(`[data-fid="${targetField}"]`);
+    let currentVal = '';
+    if(!control) { wrap.style.display = 'none'; return; }
+    if(control.classList.contains('radio-group')){
+      const sel = control.querySelector('.selected');
+      currentVal = sel ? sel.dataset.value : '';
+    } else {
+      currentVal = control.value;
+    }
+    wrap.style.display = (currentVal === targetValue) ? 'block' : 'none';
+  });
+}
+
+function collectFieldGroup(containerEl, fieldsDef){
+  const answers = {};
+  fieldsDef.forEach(f => {
+    const el = containerEl.querySelector(`[data-fid="${f.id}"]`);
+    if(!el) return;
+    if(f.type === 'radio'){
+      const sel = el.querySelector('.selected');
+      answers[f.id] = sel ? sel.dataset.value : '';
+    } else if(f.type === 'checkbox'){
+      answers[f.id] = [...el.querySelectorAll('.selected')].map(s => s.dataset.value);
+    } else if(f.type === 'file'){
+      answers[f.id] = el.files.length ? [...el.files].map(file => file.name).join(', ') : '';
+    } else {
+      answers[f.id] = el.value;
+    }
+  });
+  return answers;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function nav(view){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  renderNavCta();
+  if(view === 'dashboard') renderDashboard();
+  if(view === 'admin-dashboard') renderAdminDashboard();
+  if(view === 'wizard'){ resetWizard(); renderGeneralSubsection(); }
+}
+function scrollToId(id){ setTimeout(()=>{ const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth'}); }, 50); }
+function renderNavCta(){
+  const el = document.getElementById('nav-cta');
+  if(session.role === 'customer'){ el.innerHTML = `<button class="btn-nav" onclick="nav('dashboard')">My Campaigns</button><button class="btn-nav solid" onclick="logout()">Log Out</button>`; }
+  else if(session.role === 'admin'){ el.innerHTML = `<button class="btn-nav" onclick="nav('admin-dashboard')">Admin</button><button class="btn-nav solid" onclick="logout()">Log Out</button>`; }
+  else { el.innerHTML = `<button class="btn-nav" onclick="nav('login')">Log In</button><button class="btn-nav solid" onclick="nav('wizard')">Get Started</button>`; }
+}
+function logout(){ session = {role:null,email:null,name:null}; nav('home'); }
+
+/* ============================================================
+   HOME CONTENT
+   ============================================================ */
+function renderHomeContent(){
+  const brochure = document.getElementById('brochure-list');
+  brochure.innerHTML = Object.values(FACILITIES).map((f,i) => `
+    <div class="brochure-item ${i % 2 === 1 ? 'reverse' : ''}">
+      <div class="brochure-img"><img src="${f.image}" alt="${f.name}" onerror="this.style.display='none'"></div>
+      <div class="brochure-body">
+        <div class="model"><i class="ti ${f.icon}" style="font-size:13px; margin-right:6px; vertical-align:-2px; color:var(--maize);"></i>Model: ${f.model}</div>
+        <h3>${f.name}</h3>
+        <p class="blurb">${f.blurb}</p>
+        <div class="brochure-specs">
+          ${Object.entries(f.specs).map(([k,v]) => `<div class="spec-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('faq-list').innerHTML = FAQ_ITEMS.map((item,i) => `
+    <div class="faq-item" id="faq-${i}" onclick="toggleFaq(${i})">
+      <div class="q">${item.q}<span class="arrow">+</span></div>
+      <div class="a">${item.a}</div>
+    </div>
+  `).join('');
+}
+function toggleFaq(i){ document.getElementById('faq-'+i).classList.toggle('open'); }
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+function doLogin(){
+  const email = document.getElementById('login-email').value;
+  if(!email){ alert('Enter an email to continue.'); return; }
+  session = { role:'customer', email, name: email.split('@')[0] };
+  nav('dashboard');
+}
+function doAdminLogin(){
+  const email = document.getElementById('admin-email').value;
+  if(!email){ alert('Enter a staff email to continue.'); return; }
+  session = { role:'admin', email, name: email.split('@')[0] };
+  nav('admin-dashboard');
+}
+
+/* ============================================================
+   WIZARD — Stage 1: General Intake (5 sub-sections)
+   ============================================================ */
+function resetWizard(){
+  generalAnswers = {}; selectedFacilityKeys = []; facilityAnswers = {}; currentSubSection = 0;
+  goWizStep(1);
+}
+function goWizStep(n){
+  document.querySelectorAll('#wizard-stepper .step').forEach(s => {
+    const sn = parseInt(s.dataset.step);
+    s.classList.remove('active','done');
+    if(sn < n) s.classList.add('done'); else if(sn === n) s.classList.add('active');
+  });
+}
+
+function renderGeneralSubsection(){
+  goWizStep(1);
+  const section = GENERAL_SECTIONS[currentSubSection];
+  const body = document.getElementById('wizard-body');
+  body.innerHTML = `
+    <div class="subsection-count">Section 1 of 3 · General Intake · Part ${currentSubSection+1} of ${GENERAL_SECTIONS.length}</div>
+    <div class="panel-title">${section.title}</div>
+    <div class="panel-sub">${section.title === 'What You Need Tested' ? 'Select every facility that applies. You will answer a short technical form for each one.' : ''}</div>
+    <div class="card" id="general-fields-card">
+      ${section.fields.map(f => renderField(f, () => generalAnswers)).join('')}
+      ${section.title === 'Compliance & Legal' ? `
+      <div class="ack-box" style="margin-top:6px;">
+        <input type="checkbox" id="ack-checkbox">
+        <label for="ack-checkbox">I understand that SPRL is not responsible for damage, loss, or delay related to the test article, and that SPRL's role is limited to performing the requested test using its facilities.</label>
+      </div>` : ''}
+      ${section.title === 'Review Process' ? `
+      <div class="info-block" style="margin-top:16px;">Many customers reference NASA's General Environmental Verification Standard when setting test levels. <a href="https://standards.nasa.gov/standard/GSFC/GSFC-STD-7000" target="_blank" rel="noopener">View GEVS (GSFC-STD-7000) →</a></div>` : ''}
+    </div>
+    <div class="actions">
+      <button class="btn-ghost" onclick="wizGeneralBack()">${currentSubSection === 0 ? '← Back to home' : '← Back'}</button>
+      <button class="btn-primary" onclick="wizGeneralNext()">${currentSubSection === GENERAL_SECTIONS.length - 1 ? 'Continue to facility details →' : 'Continue →'}</button>
+    </div>
+  `;
+  wireFieldGroup(body);
+  applyConditionalVisibility(body);
+}
+
+function wizGeneralBack(){
+  if(currentSubSection === 0){ nav('home'); return; }
+  currentSubSection--;
+  renderGeneralSubsection();
+}
+
+function wizGeneralNext(){
+  const body = document.getElementById('wizard-body');
+  const section = GENERAL_SECTIONS[currentSubSection];
+  const answers = collectFieldGroup(body, section.fields);
+  Object.assign(generalAnswers, answers);
+
+  if(section.title === 'Compliance & Legal'){
+    if(!document.getElementById('ack-checkbox').checked){
+      alert('Please acknowledge the liability statement before continuing.');
+      return;
+    }
+    generalAnswers.acknowledged = true;
+  }
+  if(section.title === 'Organization & Contact'){
+    if(!generalAnswers.org_name || !generalAnswers.contact_name || !generalAnswers.contact_email){
+      alert('Please fill in company name, contact name, and contact email.');
+      return;
+    }
+  }
+  if(section.title === 'What You Need Tested'){
+    if(!generalAnswers.facilities || generalAnswers.facilities.length === 0){
+      alert('Please select at least one facility/test.');
+      return;
+    }
+  }
+
+  if(currentSubSection < GENERAL_SECTIONS.length - 1){
+    currentSubSection++;
+    renderGeneralSubsection();
+  } else {
+    startFacilityStage();
+  }
+}
+
+/* ============================================================
+   WIZARD — Stage 2: Facility-specific details (loops selected facilities)
+   Handles "Not sure — help me choose" with a lightweight helper first.
+   ============================================================ */
+function startFacilityStage(){
+  const chosen = generalAnswers.facilities || [];
+  selectedFacilityKeys = chosen.filter(l => l !== 'Not sure — help me choose').map(l => FACILITY_LABELS_TO_KEY[l]);
+  if(chosen.includes('Not sure — help me choose')){
+    renderHelpMeChoose();
+  } else {
+    renderFacilityStage();
+  }
+}
+
+function renderHelpMeChoose(){
+  goWizStep(2);
+  const body = document.getElementById('wizard-body');
+  body.innerHTML = `
+    <div class="subsection-count">Section 2 of 3 · Facility Details</div>
+    <div class="panel-title">Let's find the right facility</div>
+    <div class="panel-sub">A few quick questions to suggest a starting point. An SPRL engineer will confirm the final match.</div>
+    <div class="card">
+      <div class="field"><label>What kind of testing do you need?</label>
+        <div class="radio-group" id="hmc-category">
+          <div class="radio-option" data-value="vibration">Vibration</div>
+          <div class="radio-option" data-value="thermal">Thermal only (no vacuum)</div>
+          <div class="radio-option" data-value="thermal-vacuum">Thermal + vacuum</div>
+          <div class="radio-option" data-value="cryo">Vacuum with cryogenic (LN2) cooling</div>
+        </div>
+      </div>
+      <div class="field" id="hmc-size-wrap" style="display:none;">
+        <label>How would you describe the test article?</label>
+        <div class="radio-group" id="hmc-size">
+          <div class="radio-option" data-value="small">Small / lightweight</div>
+          <div class="radio-option" data-value="large">Larger / heavier</div>
+        </div>
+        <div class="hint">Final facility assignment for vibration testing is confirmed by an SPRL engineer based on force and G-level requirements.</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn-ghost" onclick="currentSubSection = GENERAL_SECTIONS.length - 1; renderGeneralSubsection();">← Back</button>
+      <button class="btn-primary" onclick="resolveHelpMeChoose()">See suggested facility →</button>
+    </div>
+  `;
+  document.getElementById('hmc-category').addEventListener('click', (e) => {
+    const opt = e.target.closest('.radio-option'); if(!opt) return;
+    document.querySelectorAll('#hmc-category .radio-option').forEach(o=>o.classList.remove('selected'));
+    opt.classList.add('selected');
+    document.getElementById('hmc-size-wrap').style.display = opt.dataset.value === 'vibration' ? 'block' : 'none';
+  });
+  document.getElementById('hmc-size').addEventListener('click', (e) => {
+    const opt = e.target.closest('.radio-option'); if(!opt) return;
+    document.querySelectorAll('#hmc-size .radio-option').forEach(o=>o.classList.remove('selected'));
+    opt.classList.add('selected');
+  });
+}
+
+function resolveHelpMeChoose(){
+  const cat = document.querySelector('#hmc-category .selected');
+  if(!cat){ alert('Select a test category.'); return; }
+  const val = cat.dataset.value;
+  let key;
+  if(val === 'vibration'){
+    const size = document.querySelector('#hmc-size .selected');
+    key = (size && size.dataset.value === 'large') ? 'large-vib' : 'small-vib';
+  } else if(val === 'thermal'){ key = 'cincinnati'; }
+  else if(val === 'thermal-vacuum'){ key = 'blue-tvac'; }
+  else if(val === 'cryo'){ key = 'silver-vac'; }
+  if(!selectedFacilityKeys.includes(key)) selectedFacilityKeys.push(key);
+  renderFacilityStage();
+}
+
+let facilityStageIndex = 0;
+function renderFacilityStage(){
+  facilityStageIndex = 0;
+  renderCurrentFacilityForm();
+}
+function renderCurrentFacilityForm(){
+  goWizStep(2);
+  const key = selectedFacilityKeys[facilityStageIndex];
+  const f = FACILITIES[key];
+  const body = document.getElementById('wizard-body');
+  body.innerHTML = `
+    <div class="subsection-count">Section 2 of 3 · Facility Details · ${facilityStageIndex+1} of ${selectedFacilityKeys.length}</div>
+    <div class="panel-title">${f.name}</div>
+    <div class="panel-sub">${f.blurb}</div>
+    <div class="card">
+      <h3 class="card-head">Facility specifications (reference)</h3>
+      <table style="width:100%; font-size:13px; border-collapse:collapse;">
+        ${Object.entries(f.specs).map(([k,v]) => `<tr><td style="padding:5px 0; color:var(--steel); width:44%;">${k}</td><td style="padding:5px 0; font-family:var(--font-mono);">${v}</td></tr>`).join('')}
+      </table>
+    </div>
+    <div class="card" id="facility-fields-card">
+      ${f.fields.map(fld => renderField(fld, () => (facilityAnswers[key] || {}))).join('')}
+    </div>
+    <div class="actions">
+      <button class="btn-ghost" onclick="facilityStageBack()">← Back</button>
+      <button class="btn-primary" onclick="facilityStageNext()">${facilityStageIndex === selectedFacilityKeys.length-1 ? 'Continue to account →' : 'Next facility →'}</button>
+    </div>
+  `;
+  wireFieldGroup(body);
+  applyConditionalVisibility(body);
+}
+function facilityStageBack(){
+  if(facilityStageIndex === 0){ startFacilityStage(); return; }
+  facilityStageIndex--;
+  renderCurrentFacilityForm();
+}
+function facilityStageNext(){
+  const key = selectedFacilityKeys[facilityStageIndex];
+  const f = FACILITIES[key];
+  const body = document.getElementById('wizard-body');
+  facilityAnswers[key] = collectFieldGroup(body, f.fields);
+  if(facilityStageIndex < selectedFacilityKeys.length - 1){
+    facilityStageIndex++;
+    renderCurrentFacilityForm();
+  } else {
+    renderAccountStage();
+  }
+}
+
+/* ============================================================
+   WIZARD — Stage 3: Create account
+   ============================================================ */
+function renderAccountStage(){
+  goWizStep(3);
+  const body = document.getElementById('wizard-body');
+  body.innerHTML = `
+    <div class="subsection-count">Section 3 of 3 · Create Your Account</div>
+    <div class="panel-title">Create your account</div>
+    <div class="panel-sub">This gives you a dashboard to track this campaign and add more tests.</div>
+    <div class="card">
+      <div class="field"><label>Email (for login)</label><input type="email" id="w-acct-email" value="${generalAnswers.contact_email || ''}"></div>
+      <div class="field"><label>Password</label><input type="password" id="w-acct-password" placeholder="Choose a password"></div>
+    </div>
+    <div class="actions">
+      <button class="btn-ghost" onclick="facilityStageIndex = selectedFacilityKeys.length-1; renderCurrentFacilityForm();">← Back</button>
+      <button class="btn-primary" onclick="submitWizard()">Submit & create account →</button>
+    </div>
+  `;
+}
+
+function submitWizard(){
+  const acctEmail = document.getElementById('w-acct-email').value || generalAnswers.contact_email;
+  if(!acctEmail){ alert('Enter an email to create your account.'); return; }
+
+  const id = 'camp-' + campaignCounter;
+  const ticketId = 'TB-' + new Date().getFullYear() + '-' + String(1000 + campaignCounter).padStart(4,'0');
+  campaignCounter++;
+
+  const tests = selectedFacilityKeys.map(key => ({ type:key, answers: facilityAnswers[key] || {}, addedAt: new Date().toISOString() }));
+
+  const campaign = {
+    id, ticketId, email: acctEmail,
+    general: { ...generalAnswers },
+    status: 'submitted', createdAt: new Date().toISOString(),
+    tests,
+    updates: [{ author:'System', note:'Campaign submitted. An SPRL test engineer will review your request.', at: new Date().toISOString() }]
+  };
+  campaigns.push(campaign);
+  session = { role:'customer', email: acctEmail, name: generalAnswers.contact_name };
+  openCampaign(id, false);
+}
+
+/* ============================================================
+   CUSTOMER DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  document.getElementById('dash-welcome').textContent = session.email ? `Logged in as ${session.email}` : '';
+  const myCampaigns = campaigns.filter(c => c.email === session.email);
+  const list = document.getElementById('campaign-list');
+  if(myCampaigns.length === 0){
+    list.innerHTML = `<div class="empty-state"><div class="icon">📋</div>No campaigns yet.<br><br><button class="btn-primary" onclick="nav('wizard')">+ New campaign</button></div>`;
+    return;
+  }
+  list.innerHTML = myCampaigns.map(c => `
+    <div class="campaign-card" onclick="openCampaign('${c.id}', false)">
+      <div>
+        <div class="name">${c.general.org_name || 'Untitled Campaign'}</div>
+        <div class="meta">${c.ticketId} · ${c.tests.length} test${c.tests.length===1?'':'s'} · created ${new Date(c.createdAt).toLocaleDateString()}</div>
+      </div>
+      <span class="status-pill ${c.status}">${statusPillHTML(c.status)}</span>
+    </div>
+  `).join('');
+}
+function statusLabel(s){ return {submitted:'Submitted',review:'Under Review',matched:'Matched',scheduled:'Scheduled',complete:'Complete'}[s] || s; }
+function statusIcon(s){ return {submitted:'ti-send',review:'ti-search',matched:'ti-checkbox',scheduled:'ti-calendar-event',complete:'ti-circle-check'}[s] || 'ti-circle'; }
+function statusPillHTML(s){ return `<i class="ti ${statusIcon(s)}" style="font-size:12px; margin-right:5px; vertical-align:-1px;"></i>${statusLabel(s)}`; }
+
+function openCampaign(id, isAdmin){
+  currentCampaignId = id;
+  if(isAdmin){ renderAdminCampaignDetail(); nav('admin-campaign-detail'); }
+  else { renderCampaignDetail(); nav('campaign-detail'); }
+}
+
+function renderCampaignDetail(){
+  const c = campaigns.find(x => x.id === currentCampaignId); if(!c) return;
+  document.getElementById('cd-title').textContent = c.general.org_name || 'Untitled Campaign';
+  document.getElementById('cd-ticket').textContent = c.ticketId;
+  const statusEl = document.getElementById('cd-status');
+  statusEl.innerHTML = statusPillHTML(c.status); statusEl.className = 'status-pill ' + c.status;
+  renderTestList(c, false);
+  renderUpdateFeed(c, false);
+  renderCalendar(c, false);
+  renderBudget(c);
+  switchCampaignTab('tests');
+}
+function switchCampaignTab(tab){
+  document.querySelectorAll('#view-campaign-detail .dash-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  ['tests','updates','calendar','budget'].forEach(t => document.getElementById('cd-tab-'+t).style.display = t===tab ? 'block' : 'none');
+}
+
+function renderTestList(campaign, isAdmin){
+  const listEl = document.getElementById(isAdmin ? 'acd-test-list' : 'cd-test-list');
+  if(campaign.tests.length === 0){ listEl.innerHTML = `<div class="empty-state" style="padding:30px 20px;">No tests on this campaign.</div>`; return; }
+  listEl.innerHTML = campaign.tests.map((t,i) => `
+    <div class="test-row">
+      <div class="ttype"><i class="ti ${FACILITIES[t.type].icon}" style="font-size:16px; margin-right:7px; vertical-align:-3px; color:var(--maize);"></i>${FACILITIES[t.type].name}</div>
+      <div class="tmeta">${FACILITIES[t.type].model} · added ${new Date(t.addedAt).toLocaleDateString()}</div>
+    </div>
+  `).join('');
+}
+
+function renderUpdateFeed(campaign, isAdmin){
+  const feedEl = document.getElementById(isAdmin ? 'acd-update-feed' : 'cd-update-feed');
+  const updates = [...campaign.updates].reverse();
+  feedEl.innerHTML = updates.map(u => `
+    <div class="update-item"><div class="meta">${u.author} · ${new Date(u.at).toLocaleString()}</div><div class="note">${u.note}</div></div>
+  `).join('');
+}
+
+function renderCalendar(campaign, isAdmin){
+  const el = document.getElementById(isAdmin ? 'acd-calendar' : 'cd-calendar');
+  if(campaign.tests.length === 0){ el.innerHTML = `<div class="empty-state" style="padding:30px 20px;">Add a test to see facility availability.</div>`; return; }
+  const facilityKey = campaign.tests[0].type;
+  const f = FACILITIES[facilityKey];
+  const now = new Date();
+  const year = now.getFullYear(), month = now.getMonth();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const monthName = now.toLocaleString('default', { month:'long' });
+  let cells = '';
+  for(let i=0;i<firstDay;i++) cells += `<div class="cal-day blank"></div>`;
+  for(let d=1; d<=daysInMonth; d++){
+    const booked = (d * 7 + facilityKey.length) % 5 === 0;
+    cells += `<div class="cal-day ${booked?'booked':'available'}">${d}</div>`;
+  }
+  el.innerHTML = `
+    <div class="cal-wrap">
+      <div class="cal-head"><div class="title">${f.name} — ${monthName} ${year}</div></div>
+      <div class="cal-grid">
+        ${['S','M','T','W','T','F','S'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}
+        ${cells}
+      </div>
+      <div class="cal-legend">
+        <span><span class="dot" style="background:var(--success-bg); border:1px solid var(--success);"></span>Available</span>
+        <span><span class="dot" style="background:var(--danger-bg); border:1px solid var(--danger);"></span>Booked</span>
+      </div>
+      <div class="cal-note">Example availability shown for demo purposes — not connected to live scheduling data yet.</div>
+    </div>
+  `;
+}
+
+function renderBudget(campaign){
+  const el = document.getElementById('cd-budget');
+  const durationMap = { "< 1 day":1, "1–2 days":1.5, "3–5 days":4, "More than a week":7, "Not sure":null };
+  const days = durationMap[campaign.general.duration];
+  if(!days || campaign.tests.length === 0){
+    el.innerHTML = `<div class="empty-state" style="padding:30px 20px;">Add a test and a duration estimate to see a rough budget.</div>`;
+    return;
+  }
+  const total = campaign.tests.reduce((sum, t) => sum + (FACILITIES[t.type].dayRate * days), 0);
+  el.innerHTML = `
+    <div class="estimate-box">
+      <div class="label">Rough estimate</div>
+      <div class="amount">$${total.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+      <div class="disclaimer">Based on example day-rates (${campaign.tests.map(t=>'$'+FACILITIES[t.type].dayRate+'/day for '+FACILITIES[t.type].name).join(', ')}) × ~${days} day(s). SPRL's official recharge rate has not yet been established — replace these figures once it is.</div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   ADMIN DASHBOARD
+   ============================================================ */
+function renderAdminDashboard(){
+  const wrap = document.getElementById('admin-campaign-table-wrap');
+  if(campaigns.length === 0){ wrap.innerHTML = `<div class="empty-state"><div class="icon">🗂️</div>No campaigns submitted yet.</div>`; return; }
+  wrap.innerHTML = `
+    <table class="admin-table">
+      <thead><tr><th>Company</th><th>Ticket</th><th>Contact</th><th>Tests</th><th>Status</th></tr></thead>
+      <tbody>
+        ${campaigns.map(c => `
+          <tr onclick="openCampaign('${c.id}', true)">
+            <td>${c.general.org_name || '—'}</td>
+            <td style="font-family:var(--font-mono);">${c.ticketId}</td>
+            <td>${c.email}</td>
+            <td>${c.tests.length}</td>
+            <td><span class="status-pill ${c.status}">${statusPillHTML(c.status)}</span></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderAdminCampaignDetail(){
+  const c = campaigns.find(x => x.id === currentCampaignId); if(!c) return;
+  document.getElementById('acd-title').textContent = c.general.org_name || 'Untitled Campaign';
+  document.getElementById('acd-ticket').textContent = c.ticketId;
+  document.getElementById('acd-status-select').value = c.status;
+
+  const g = c.general;
+  document.getElementById('acd-info-card').innerHTML = `
+    <div class="row-3">
+      <div class="field"><div class="hint">Contact</div><div>${g.contact_name || '—'} · ${g.contact_email || '—'}</div></div>
+      <div class="field"><div class="hint">Requester type</div><div>${g.requester_type || '—'}</div></div>
+      <div class="field"><div class="hint">ITAR / export control</div><div>${g.itar || '—'}</div></div>
+      <div class="field"><div class="hint">NDA required</div><div>${g.nda || '—'}</div></div>
+      <div class="field"><div class="hint">Preferred dates</div><div>${g.date_start || '—'} to ${g.date_end || '—'} (${g.flexible || '—'})</div></div>
+      <div class="field"><div class="hint">Duration / Budget</div><div>${g.duration || '—'} · $${g.budget || '—'}</div></div>
+      <div class="field"><div class="hint">Drawing uploaded</div><div>${g.drawing || 'None'}</div></div>
+      <div class="field"><div class="hint">Supporting docs</div><div>${g.supporting_docs || 'None'}</div></div>
+      <div class="field"><div class="hint">Reviews completed</div><div>${(g.reviews||[]).join(', ') || '—'}</div></div>
+    </div>
+    <div class="field" style="margin-top:16px;"><div class="hint">Test article description</div><div>${g.description || '—'}</div></div>
+    <div class="field"><div class="hint">Materials list</div><div>${g.materials || '—'}</div></div>
+  `;
+  renderTestList(c, true);
+  renderUpdateFeed(c, true);
+  renderCalendar(c, true);
+  switchAdminTab('tests');
+}
+function switchAdminTab(tab){
+  document.querySelectorAll('#view-admin-campaign-detail .dash-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  ['tests','updates','calendar'].forEach(t => document.getElementById('acd-tab-'+t).style.display = t===tab ? 'block' : 'none');
+}
+function updateAdminStatus(){
+  const c = campaigns.find(x => x.id === currentCampaignId);
+  const newStatus = document.getElementById('acd-status-select').value;
+  c.status = newStatus;
+  c.updates.push({ author:'SPRL Staff', note:`Status changed to "${statusLabel(newStatus)}".`, at:new Date().toISOString() });
+  renderUpdateFeed(c, true);
+}
+function postAdminUpdate(){
+  const noteEl = document.getElementById('acd-new-update');
+  if(!noteEl.value.trim()) return;
+  const c = campaigns.find(x => x.id === currentCampaignId);
+  c.updates.push({ author:'SPRL Staff', note: noteEl.value.trim(), at:new Date().toISOString() });
+  noteEl.value = '';
+  renderUpdateFeed(c, true);
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderHomeContent();
+renderNavCta();
+resetWizard();
+</script>
+</body>
+</html>
