@@ -192,14 +192,38 @@
   .cal-legend .dot{ width:10px; height:10px; border-radius:2px; display:inline-block; margin-right:6px; }
   .cal-note{ font-size:11.5px; color:var(--steel-light); margin-top:10px; }
 
-  /* budget estimator */
-  .estimate-box{ background:var(--success-bg); border:1px solid #BFE3CD; border-radius:6px; padding:18px 20px; }
-  .estimate-box .amount{ font-family:var(--font-display); font-size:26px; font-weight:700; color:var(--success); }
-  .estimate-box .label{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--success); margin-bottom:4px; }
-  .estimate-box .disclaimer{ font-size:11.5px; color:var(--steel); margin-top:10px; }
-
   .info-block{ background:#EEF1FF; border:1px solid #D6DCFA; border-radius:6px; padding:14px 18px; font-size:12.5px; color:#33407A; }
   .info-block a{ text-decoration:underline; font-weight:600; }
+
+  /* safety */
+  .safety-block{ background:var(--warn-bg); border:1px solid #F0D9B5; border-radius:6px; padding:16px 18px; font-size:13px; color:#6B4A16; line-height:1.6; margin-bottom:14px; }
+  .safety-block h4{ font-family:var(--font-display); font-size:13.5px; color:#6B4A16; margin-bottom:6px; }
+  .safety-block ul{ margin:6px 0 0 18px; }
+
+  /* standard interface placeholder */
+  .interface-photo{ display:flex; gap:14px; align-items:center; background:#FAFAF9; border:1px dashed var(--line); border-radius:6px; padding:14px 16px; margin-bottom:6px; }
+  .interface-photo .frame{ width:64px; height:64px; border-radius:4px; background:#EFEFEF; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--steel-light); font-size:20px; flex-shrink:0; }
+  .interface-photo .txt{ font-size:12px; color:var(--steel); }
+
+  /* open items */
+  .open-item{ background:#fff; border:1px solid var(--line); border-radius:6px; padding:12px 16px; margin-bottom:8px; display:flex; align-items:flex-start; gap:10px; }
+  .open-item input[type="checkbox"]{ width:auto; margin-top:3px; }
+  .open-item.done .txt{ text-decoration:line-through; color:var(--steel-light); }
+  .add-item-row{ display:flex; gap:10px; margin-top:12px; }
+  .add-item-row input{ flex:1; }
+
+  /* auto-generated test plan document */
+  .plan-doc{ background:#fff; border:1px solid var(--line); border-radius:6px; padding:36px; }
+  .plan-doc .doc-header{ display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid var(--navy); padding-bottom:16px; margin-bottom:22px; }
+  .plan-doc .doc-header .id{ font-family:var(--font-mono); font-size:11.5px; color:var(--steel-light); }
+  .plan-doc h2{ font-family:var(--font-display); font-size:20px; color:var(--navy-deep); }
+  .plan-doc .doc-status{ font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.05em; background:var(--maize); color:var(--navy-deep); padding:5px 10px; border-radius:3px; font-weight:600; height:fit-content; }
+  .plan-section{ margin-bottom:22px; }
+  .plan-section h4{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--steel-light); margin-bottom:10px; border-bottom:1px solid var(--line); padding-bottom:6px; }
+  .plan-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px 24px; }
+  .plan-item{ margin-bottom:8px; }
+  .plan-item .k{ font-size:11.5px; color:var(--steel); }
+  .plan-item .v{ font-size:13.5px; color:var(--navy-deep); font-weight:500; }
 
   @media print{
     header.topnav,.stepper,.actions,.demo-banner,.dash-tabs{ display:none !important; }
@@ -274,7 +298,8 @@
     <div class="stepper" id="wizard-stepper">
       <div class="step" data-step="1"><div class="dot">1</div><div class="label">General Intake</div><div class="connector"></div></div>
       <div class="step" data-step="2"><div class="dot">2</div><div class="label">Facility Details</div><div class="connector"></div></div>
-      <div class="step" data-step="3"><div class="dot">3</div><div class="label">Account</div></div>
+      <div class="step" data-step="3"><div class="dot">3</div><div class="label">Schedule</div><div class="connector"></div></div>
+      <div class="step" data-step="4"><div class="dot">4</div><div class="label">Account</div></div>
     </div>
     <div id="wizard-body"></div>
   </main>
@@ -305,13 +330,15 @@
     <div class="dash-tabs">
       <div class="dash-tab active" data-tab="tests" onclick="switchCampaignTab('tests')"><i class="ti ti-clipboard-list" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Tests</div>
       <div class="dash-tab" data-tab="updates" onclick="switchCampaignTab('updates')"><i class="ti ti-message-circle" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Updates</div>
+      <div class="dash-tab" data-tab="openitems" onclick="switchCampaignTab('openitems')"><i class="ti ti-list-check" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Open Items</div>
       <div class="dash-tab" data-tab="calendar" onclick="switchCampaignTab('calendar')"><i class="ti ti-calendar" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Facility Calendar</div>
-      <div class="dash-tab" data-tab="budget" onclick="switchCampaignTab('budget')"><i class="ti ti-currency-dollar" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Budget Estimate</div>
+      <div class="dash-tab" data-tab="plan" onclick="switchCampaignTab('plan')"><i class="ti ti-file-text" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Test Plan</div>
     </div>
     <div id="cd-tab-tests"><div id="cd-test-list"></div></div>
     <div id="cd-tab-updates" style="display:none;"><div class="update-feed" id="cd-update-feed"></div></div>
+    <div id="cd-tab-openitems" style="display:none;"><div id="cd-openitems"></div></div>
     <div id="cd-tab-calendar" style="display:none;"><div id="cd-calendar"></div></div>
-    <div id="cd-tab-budget" style="display:none;"><div id="cd-budget"></div></div>
+    <div id="cd-tab-plan" style="display:none;"><div id="cd-plan"></div></div>
   </main>
 </div>
 
@@ -363,14 +390,21 @@
     <div class="dash-tabs">
       <div class="dash-tab active" data-tab="tests" onclick="switchAdminTab('tests')"><i class="ti ti-clipboard-list" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Tests</div>
       <div class="dash-tab" data-tab="updates" onclick="switchAdminTab('updates')"><i class="ti ti-message-circle" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Updates</div>
+      <div class="dash-tab" data-tab="openitems" onclick="switchAdminTab('openitems')"><i class="ti ti-list-check" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Open Items</div>
       <div class="dash-tab" data-tab="calendar" onclick="switchAdminTab('calendar')"><i class="ti ti-calendar" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Facility Calendar</div>
+      <div class="dash-tab" data-tab="plan" onclick="switchAdminTab('plan')"><i class="ti ti-file-text" style="font-size:15px; margin-right:5px; vertical-align:-2px;"></i>Test Plan</div>
     </div>
     <div id="acd-tab-tests"><div id="acd-test-list"></div></div>
     <div id="acd-tab-updates" style="display:none;">
       <div class="update-feed" id="acd-update-feed"></div>
       <div class="post-update-row"><textarea id="acd-new-update" placeholder="Post an update for the customer..."></textarea><button class="btn-small" onclick="postAdminUpdate()">Post</button></div>
     </div>
+    <div id="acd-tab-openitems" style="display:none;">
+      <div id="acd-openitems"></div>
+      <div class="add-item-row"><input type="text" id="acd-new-item" placeholder="Add an open item..."><button class="btn-small" onclick="addOpenItem()">Add</button></div>
+    </div>
     <div id="acd-tab-calendar" style="display:none;"><div id="acd-calendar"></div></div>
+    <div id="acd-tab-plan" style="display:none;"><div id="acd-plan"></div></div>
   </main>
 </div>
 
@@ -383,13 +417,16 @@ const FACILITIES = {
     name:"Large Vibration Table", model:"Unholtz Dickie 560", image:"images/large-vibration-table.jpg", icon:"ti-activity",
     blurb:"Simulates vibration loads such as those from a rocket launch. Suited for larger or heavier test articles.",
     specs:{ "Displacement":"1 inch peak-to-peak", "Frequency Range":"5 Hz – 2,000 Hz", "Force Rating":"6,500 lbf sine peak · 5,700 lbf random RMS", "Max Velocity":"65 in/sec" },
-    dayRate: 500,
+    interfaceNote: `<div class="card"><h3 class="card-head">Standard SPRL interface</h3>
+      <div class="interface-photo"><div class="frame"><i class="ti ti-photo"></i></div><div class="txt">Photo and drawing of SPRL's standard mounting plate — to be added by SPRL staff.</div></div>
+      <div class="hint">If your test article can mount to the standard SPRL interface, note that below. If you need a special/custom interface instead, describe it in the mounting field and in "custom interface hardware" earlier in the intake.</div>
+    </div>`,
     fields:[
       { id:"weight", label:"Test article weight, including any fixture (lbs)", type:"number" },
       { id:"dims", label:"Test article dimensions (L x W x H)", type:"text" },
       { id:"profile", label:"Type of vibration profile needed", type:"checkbox", options:["Sine sweep","Random vibration","Shock","Not sure — need guidance"] },
       { id:"freqforce", label:"Specific frequency range and force levels required, if known", type:"textarea" },
-      { id:"mounting", label:"Mounting interface", type:"radio", options:["Existing fixture (attach drawing above)","Needs fixture fabricated","Not sure"] },
+      { id:"mounting", label:"Mounting interface", type:"radio", options:["Standard SPRL interface","Special / custom interface needed","Not sure"] },
       { id:"instrumented", label:"Will the test article be powered or instrumented during the test?", type:"radio", options:["Yes","No"] },
       { id:"instrumented_desc", label:"Describe the instrumentation or data needs", type:"textarea", showIf:{field:"instrumented", equals:"Yes"} },
       { id:"fragile", label:"Any fragile or sensitive components SPRL should be aware of?", type:"textarea" },
@@ -403,13 +440,16 @@ const FACILITIES = {
     name:"Small Vibration Table", model:"Unholtz Dickie 206C", image:"images/small-vibration-table.jpg", icon:"ti-pulse",
     blurb:"Simulates vibration loads such as from a rocket launch. Suited for smaller, lighter test articles.",
     specs:{ "Displacement":"1 inch peak-to-peak", "Frequency Range":"5 Hz – 2,000 Hz", "Force Rating":"1,700 lbf sine peak · 1,350 lbf random RMS", "Max Velocity":"59 in/sec", "Max Free Table Accel.":"61 g", "Slip-Table":"18\" × 25\" magnesium · 68 lbs max moving mass" },
-    dayRate: 350,
+    interfaceNote: `<div class="card"><h3 class="card-head">Standard SPRL interface</h3>
+      <div class="interface-photo"><div class="frame"><i class="ti ti-photo"></i></div><div class="txt">Photo and drawing of SPRL's standard mounting plate — to be added by SPRL staff.</div></div>
+      <div class="hint">If your test article can mount to the standard SPRL interface, note that below. If you need a special/custom interface instead, describe it in the mounting field and in "custom interface hardware" earlier in the intake.</div>
+    </div>`,
     fields:[
       { id:"weight", label:"Test article weight, including any fixture (lbs)", type:"number", hint:"Must not exceed the 68 lb max moving mass of the slip-table." },
       { id:"dims", label:"Test article dimensions (L x W x H)", type:"text" },
       { id:"profile", label:"Type of vibration profile needed", type:"checkbox", options:["Sine sweep","Random vibration","Shock","Not sure — need guidance"] },
       { id:"freqforce", label:"Specific frequency range and force levels required, if known", type:"textarea" },
-      { id:"mounting", label:"Mounting interface", type:"radio", options:["Existing fixture (attach drawing above)","Needs fixture fabricated","Not sure"] },
+      { id:"mounting", label:"Mounting interface", type:"radio", options:["Standard SPRL interface","Special / custom interface needed","Not sure"] },
       { id:"instrumented", label:"Will the test article be powered or instrumented during the test?", type:"radio", options:["Yes","No"] },
       { id:"instrumented_desc", label:"Describe the instrumentation or data needs", type:"textarea", showIf:{field:"instrumented", equals:"Yes"} },
       { id:"fragile", label:"Any fragile or sensitive components SPRL should be aware of?", type:"textarea" },
@@ -423,7 +463,6 @@ const FACILITIES = {
     name:"Blue Thermal Vacuum Chamber", model:"Bemco A6H-55/150C-28", image:"images/blue-tvac.jpg", icon:"ti-atom-2",
     blurb:"Simulates the upper atmosphere or outer space, combining vacuum conditions with a wide temperature range.",
     specs:{ "Temperature Range":"−55°C to +150°C", "Shroud Size":"36\" dia × 48\" long", "Base Pressure":"< 5×10⁻⁶ torr", "Platen Size":"18\" × 48\"" },
-    dayRate: 600,
     fields:[
       { id:"dims", label:"Test article dimensions (L x W x H)", type:"text", hint:"Must fit within the 36\" diameter shroud and 18\"×48\" platen." },
       { id:"temprange", label:"Required temperature range for this test (°C)", type:"text", hint:"Must be within −55°C to +150°C." },
@@ -440,7 +479,6 @@ const FACILITIES = {
     name:"Silver Vacuum Chamber", model:"Silver Vacuum Chamber", image:"images/silver-vacuum-chamber.jpg", icon:"ti-snowflake",
     blurb:"Primarily used to simulate the vacuum of space, with the added capability to cool the platen directly with liquid nitrogen for cryogenic testing.",
     specs:{ "Cooling":"Direct LN2 cooling (77K / −196°C)", "Interior Size":"36\" dia × 48\" long", "Base Pressure":"< 5×10⁻⁶ torr", "Pump Type":"Turbopump" },
-    dayRate: 550,
     fields:[
       { id:"dims", label:"Test article dimensions (L x W x H)", type:"text", hint:"Must fit within the 36\" diameter × 48\" interior." },
       { id:"cryo", label:"Do you require liquid nitrogen (cryogenic) cooling for this test?", type:"radio", options:["Yes","No"] },
@@ -457,7 +495,6 @@ const FACILITIES = {
     name:"Cincinnati Sub-Zero Thermal Chamber", model:"ZP-32.5-SCT/AC", image:"images/cincinnati-sub-zero.jpg", icon:"ti-thermometer",
     blurb:"Provides a wide temperature range for testing hardware at ambient (non-vacuum) pressure. Can be purged with dry nitrogen.",
     specs:{ "Pressure":"Ambient (dry N2 purge available)", "Max Internal Dimensions":"30\" × 30\" × 30\"", "Temperature Range":"−45°C to +190°C", "Profiles":"Programmable" },
-    dayRate: 400,
     fields:[
       { id:"dims", label:"Test article dimensions (L x W x H)", type:"text", hint:"Must fit within 30\"×30\"×30\"." },
       { id:"temprange", label:"Required temperature range for this test (°C)", type:"text", hint:"Must be within −45°C to +190°C." },
@@ -497,30 +534,43 @@ const GENERAL_SECTIONS = [
     { id:"drawing", label:"Upload a drawing of the test article (required)", type:"file", hint:"Accepts PDF, STEP, DWG." },
     { id:"supporting_docs", label:"Upload supporting documents (test plan, prior reports, interface control documents)", type:"file", hint:"Optional, multiple files.", multiple:true },
     { id:"materials", label:"List of materials used in the test article (and any materials that must NOT be used or exposed)", type:"textarea" },
-    { id:"pressure_vessels", label:"Does the test article contain any pressure vessels?", type:"radio", options:["Yes","No"] },
+    { id:"pressure_vessels", label:"Does the test article contain any pressure vessels?", type:"radio", options:["Yes","No"], hint:"Not sure what counts? See \"What is a pressure vessel?\" in the FAQ." },
     { id:"cables_needed", label:"Do any cables, fixtures, or custom interface hardware need to be fabricated for this test?", type:"radio", options:["Yes","No"] },
     { id:"cables_desc", label:"Describe the interface or cable needed", type:"textarea", showIf:{field:"cables_needed", equals:"Yes"} }
   ]},
-  { title:"Schedule & Budget", fields:[
-    { id:"date_start", label:"Preferred test start date", type:"date" },
-    { id:"date_end", label:"Preferred test end date (if a range)", type:"date" },
-    { id:"flexible", label:"Is this date flexible?", type:"radio", options:["Yes, flexible","No, fixed deadline"] },
-    { id:"fixed_reason", label:"Why is this date fixed?", type:"textarea", showIf:{field:"flexible", equals:"No, fixed deadline"} },
-    { id:"duration", label:"Estimated test duration", type:"select", options:["< 1 day","1–2 days","3–5 days","More than a week","Not sure"] },
-    { id:"budget", label:"Maximum budget available for this test (USD)", type:"number", hint:"Optional — helps SPRL scope the request realistically." },
-    { id:"support247", label:"Would you need 24/7 facility access or support?", type:"radio", options:["Yes","No","Not sure"] }
+  { title:"Handling & Safety", fields:[
+    { id:"handling_constraints", label:"Handling constraints for this test article", type:"textarea", hint:"e.g. must remain upright, no drop or impact above a certain force, keep away from magnetic fields, light-sensitive optics, requires two-person lift, temperature-sensitive outside test conditions." },
+    { id:"powered_state", label:"Will the test article be powered or unpowered during testing?", type:"radio", options:["Powered","Unpowered","Both, at different phases"] },
+    { id:"batteries", label:"Does the test article contain batteries or other stored energy (e.g. pressurized systems, capacitors, pyrotechnics)?", type:"radio", options:["Yes","No"] },
+    { id:"batteries_desc", label:"Describe what's present and any precautions needed", type:"textarea", showIf:{field:"batteries", equals:"Yes"} }
+  ]},
+  { title:"Safety & Facility Policies", fields:[
+    { id:"safety_ack", label:"I understand and agree to SPRL's safety and facility policies above", type:"checkbox_single" }
   ]},
   { title:"Review Process", fields:[
     { id:"reviews", label:"Which reviews, if any, has this test article already completed?", type:"checkbox", options:["Manufacturing Review","Test Readiness Review","Engineering Review","None yet","Not sure"] }
   ]}
 ];
 
+const SCHEDULE_SECTION = { title:"Schedule", fields:[
+  { id:"date_start", label:"Preferred test start date", type:"date" },
+  { id:"date_end", label:"Preferred test end date (if a range)", type:"date" },
+  { id:"flexible", label:"Is this date flexible?", type:"radio", options:["Yes, flexible","No, fixed deadline"] },
+  { id:"fixed_reason", label:"Why is this date fixed?", type:"textarea", showIf:{field:"flexible", equals:"No, fixed deadline"} },
+  { id:"duration", label:"Estimated test duration", type:"select", options:["< 1 day","1–2 days","3–5 days","More than a week","Not sure"] },
+  { id:"budget", label:"Maximum budget available for this test (USD)", type:"number", hint:"Optional — helps SPRL scope the request realistically." },
+  { id:"support247", label:"Normal SPRL service is 8 hours a day. Do you need extended hours or 24/7 access for this test?", type:"radio", options:["No, standard 8-hour service is fine","Yes, extended hours needed","Yes, 24/7 access needed"] },
+  { id:"support247_desc", label:"Describe the extended hours needed", type:"textarea", showIf:{field:"support247", equals:"Yes, extended hours needed"} }
+]};
+
 const FAQ_ITEMS = [
   { q:"What kind of testing services do you offer?", a:"SPRL's own facilities handle Vibration (large and small tables), Thermal Vacuum (Blue TVAC and Silver Vacuum Chamber), and ambient-pressure Thermal cycling (Cincinnati Sub-Zero). We act as your single point of contact throughout." },
   { q:"How does the process work?", a:"1) You submit a test campaign request through the platform. 2) SPRL reviews your requirements against facility specs. 3) We confirm scheduling and any fixture or feedthrough needs. 4) You track progress through your dashboard. 5) Testing is completed and results are shared." },
   { q:"Do I need an NDA or ITAR review before sharing details?", a:"If your hardware is subject to ITAR or other export controls, flag that during intake so SPRL can route your request appropriately. If you need a signed NDA before sharing technical details, you can request one as part of your submission." },
-  { q:"Is there a standard reference for test levels?", a:"Many customers reference NASA's General Environmental Verification Standard (GEVS, GSFC-STD-7000) when specifying test levels. You're welcome to cite it in your submission if it applies to your program." }
+  { q:"Is there a standard reference for test levels?", a:"Many customers reference NASA's General Environmental Verification Standard (GEVS, GSFC-STD-7000) when specifying test levels. You're welcome to cite it in your submission if it applies to your program." },
+  { q:"What is a pressure vessel?", a:"A pressure vessel is any sealed container on your test article that holds a gas or liquid at a pressure different from the surrounding air, such as a propellant tank, a sealed battery enclosure, or a pressurized instrument housing. These need to be flagged during intake because they behave differently under vacuum and vibration than solid hardware, and SPRL needs to plan around them for safety." }
 ];
+
 
 /* ============================================================
    STATE
@@ -552,6 +602,11 @@ function renderField(f, storeGetter){
     html = `<div class="radio-group" data-fid="${f.id}">${f.options.map(o=>`<div class="radio-option" data-value="${o}">${o}</div>`).join('')}</div>`;
   } else if(f.type === 'checkbox'){
     html = `<div class="checkbox-group" data-fid="${f.id}" data-multi="true">${f.options.map(o=>`<div class="radio-option" data-value="${o}">${o}</div>`).join('')}</div>`;
+  } else if(f.type === 'checkbox_single'){
+    const showIfAttr2 = f.showIf ? `data-showif-field="${f.showIf.field}" data-showif-equals="${f.showIf.equals}"` : '';
+    return `<div class="ack-box" data-fieldwrap="${f.id}" ${showIfAttr2}><input type="checkbox" data-fid="${f.id}" id="fld-${f.id}"><label for="fld-${f.id}">${f.label}</label></div>`;
+  } else if(f.type === 'info'){
+    return `<div class="field" data-fieldwrap="${f.id}">${f.html}</div>`;
   }
   const showIfAttr = f.showIf ? `data-showif-field="${f.showIf.field}" data-showif-equals="${f.showIf.equals}"` : '';
   return `<div class="field" data-fieldwrap="${f.id}" ${showIfAttr} style="${f.showIf ? 'display:none;' : ''}">
@@ -601,6 +656,8 @@ function collectFieldGroup(containerEl, fieldsDef){
       answers[f.id] = sel ? sel.dataset.value : '';
     } else if(f.type === 'checkbox'){
       answers[f.id] = [...el.querySelectorAll('.selected')].map(s => s.dataset.value);
+    } else if(f.type === 'checkbox_single'){
+      answers[f.id] = el.checked;
     } else if(f.type === 'file'){
       answers[f.id] = el.files.length ? [...el.files].map(file => file.name).join(', ') : '';
     } else {
@@ -695,10 +752,21 @@ function renderGeneralSubsection(){
   const section = GENERAL_SECTIONS[currentSubSection];
   const body = document.getElementById('wizard-body');
   body.innerHTML = `
-    <div class="subsection-count">Section 1 of 3 · General Intake · Part ${currentSubSection+1} of ${GENERAL_SECTIONS.length}</div>
+    <div class="subsection-count">Section 1 of 4 · General Intake · Part ${currentSubSection+1} of ${GENERAL_SECTIONS.length}</div>
     <div class="panel-title">${section.title}</div>
     <div class="panel-sub">${section.title === 'What You Need Tested' ? 'Select every facility that applies. You will answer a short technical form for each one.' : ''}</div>
     <div class="card" id="general-fields-card">
+      ${section.title === 'Safety & Facility Policies' ? `
+      <div class="safety-block">
+        <h4>SPRL safety standards</h4>
+        <p>Anyone visiting SPRL for a test, and every test article brought on site, must meet SPRL's facility safety standards. This includes:</p>
+        <ul>
+          <li>ESD (electrostatic discharge) training and precautions for anyone handling ESD-sensitive hardware or entering ESD-controlled areas — SPRL staff will walk you through this before your test.</li>
+          <li>Test articles and fixtures must not damage SPRL facility equipment. Customers are responsible for the cost of repair if damage occurs due to the test article, fixture, or handling.</li>
+          <li>Any batteries, pressurized systems, or other stored-energy sources must be disclosed in advance (see Handling & Safety) so SPRL can plan for them safely.</li>
+        </ul>
+      </div>
+      ` : ''}
       ${section.fields.map(f => renderField(f, () => generalAnswers)).join('')}
       ${section.title === 'Compliance & Legal' ? `
       <div class="ack-box" style="margin-top:6px;">
@@ -735,6 +803,12 @@ function wizGeneralNext(){
       return;
     }
     generalAnswers.acknowledged = true;
+  }
+  if(section.title === 'Safety & Facility Policies'){
+    if(!generalAnswers.safety_ack){
+      alert('Please acknowledge SPRL\'s safety and facility policies before continuing.');
+      return;
+    }
   }
   if(section.title === 'Organization & Contact'){
     if(!generalAnswers.org_name || !generalAnswers.contact_name || !generalAnswers.contact_email){
@@ -775,7 +849,7 @@ function renderHelpMeChoose(){
   goWizStep(2);
   const body = document.getElementById('wizard-body');
   body.innerHTML = `
-    <div class="subsection-count">Section 2 of 3 · Facility Details</div>
+    <div class="subsection-count">Section 2 of 4 · Facility Details</div>
     <div class="panel-title">Let's find the right facility</div>
     <div class="panel-sub">A few quick questions to suggest a starting point. An SPRL engineer will confirm the final match.</div>
     <div class="card">
@@ -840,7 +914,7 @@ function renderCurrentFacilityForm(){
   const f = FACILITIES[key];
   const body = document.getElementById('wizard-body');
   body.innerHTML = `
-    <div class="subsection-count">Section 2 of 3 · Facility Details · ${facilityStageIndex+1} of ${selectedFacilityKeys.length}</div>
+    <div class="subsection-count">Section 2 of 4 · Facility Details · ${facilityStageIndex+1} of ${selectedFacilityKeys.length}</div>
     <div class="panel-title">${f.name}</div>
     <div class="panel-sub">${f.blurb}</div>
     <div class="card">
@@ -849,12 +923,13 @@ function renderCurrentFacilityForm(){
         ${Object.entries(f.specs).map(([k,v]) => `<tr><td style="padding:5px 0; color:var(--steel); width:44%;">${k}</td><td style="padding:5px 0; font-family:var(--font-mono);">${v}</td></tr>`).join('')}
       </table>
     </div>
+    ${f.interfaceNote ? f.interfaceNote : ''}
     <div class="card" id="facility-fields-card">
       ${f.fields.map(fld => renderField(fld, () => (facilityAnswers[key] || {}))).join('')}
     </div>
     <div class="actions">
       <button class="btn-ghost" onclick="facilityStageBack()">← Back</button>
-      <button class="btn-primary" onclick="facilityStageNext()">${facilityStageIndex === selectedFacilityKeys.length-1 ? 'Continue to account →' : 'Next facility →'}</button>
+      <button class="btn-primary" onclick="facilityStageNext()">${facilityStageIndex === selectedFacilityKeys.length-1 ? 'Continue to schedule →' : 'Next facility →'}</button>
     </div>
   `;
   wireFieldGroup(body);
@@ -874,18 +949,46 @@ function facilityStageNext(){
     facilityStageIndex++;
     renderCurrentFacilityForm();
   } else {
-    renderAccountStage();
+    renderScheduleStage();
   }
 }
 
 /* ============================================================
-   WIZARD — Stage 3: Create account
+   WIZARD — Stage 3: Schedule (asked last, after all technical details)
    ============================================================ */
-function renderAccountStage(){
+function renderScheduleStage(){
   goWizStep(3);
   const body = document.getElementById('wizard-body');
   body.innerHTML = `
-    <div class="subsection-count">Section 3 of 3 · Create Your Account</div>
+    <div class="subsection-count">Section 3 of 4 · Schedule</div>
+    <div class="panel-title">Schedule</div>
+    <div class="panel-sub">Last thing before your account — when would you like to test?</div>
+    <div class="card" id="schedule-fields-card">
+      ${SCHEDULE_SECTION.fields.map(f => renderField(f, () => generalAnswers)).join('')}
+    </div>
+    <div class="actions">
+      <button class="btn-ghost" onclick="facilityStageIndex = selectedFacilityKeys.length-1; renderCurrentFacilityForm();">← Back</button>
+      <button class="btn-primary" onclick="scheduleStageNext()">Continue to account →</button>
+    </div>
+  `;
+  wireFieldGroup(body);
+  applyConditionalVisibility(body);
+}
+function scheduleStageNext(){
+  const body = document.getElementById('wizard-body');
+  const answers = collectFieldGroup(body, SCHEDULE_SECTION.fields);
+  Object.assign(generalAnswers, answers);
+  renderAccountStage();
+}
+
+/* ============================================================
+   WIZARD — Stage 4: Create account
+   ============================================================ */
+function renderAccountStage(){
+  goWizStep(4);
+  const body = document.getElementById('wizard-body');
+  body.innerHTML = `
+    <div class="subsection-count">Section 4 of 4 · Create Your Account</div>
     <div class="panel-title">Create your account</div>
     <div class="panel-sub">This gives you a dashboard to track this campaign and add more tests.</div>
     <div class="card">
@@ -893,7 +996,7 @@ function renderAccountStage(){
       <div class="field"><label>Password</label><input type="password" id="w-acct-password" placeholder="Choose a password"></div>
     </div>
     <div class="actions">
-      <button class="btn-ghost" onclick="facilityStageIndex = selectedFacilityKeys.length-1; renderCurrentFacilityForm();">← Back</button>
+      <button class="btn-ghost" onclick="renderScheduleStage()">← Back</button>
       <button class="btn-primary" onclick="submitWizard()">Submit & create account →</button>
     </div>
   `;
@@ -913,7 +1016,7 @@ function submitWizard(){
     id, ticketId, email: acctEmail,
     general: { ...generalAnswers },
     status: 'submitted', createdAt: new Date().toISOString(),
-    tests,
+    tests, openItems: [],
     updates: [{ author:'System', note:'Campaign submitted. An SPRL test engineer will review your request.', at: new Date().toISOString() }]
   };
   campaigns.push(campaign);
@@ -961,12 +1064,13 @@ function renderCampaignDetail(){
   renderTestList(c, false);
   renderUpdateFeed(c, false);
   renderCalendar(c, false);
-  renderBudget(c);
+  renderOpenItems(c, false);
+  renderTestPlanDoc(c, false);
   switchCampaignTab('tests');
 }
 function switchCampaignTab(tab){
   document.querySelectorAll('#view-campaign-detail .dash-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
-  ['tests','updates','calendar','budget'].forEach(t => document.getElementById('cd-tab-'+t).style.display = t===tab ? 'block' : 'none');
+  ['tests','updates','openitems','calendar','plan'].forEach(t => document.getElementById('cd-tab-'+t).style.display = t===tab ? 'block' : 'none');
 }
 
 function renderTestList(campaign, isAdmin){
@@ -1020,22 +1124,86 @@ function renderCalendar(campaign, isAdmin){
   `;
 }
 
-function renderBudget(campaign){
-  const el = document.getElementById('cd-budget');
-  const durationMap = { "< 1 day":1, "1–2 days":1.5, "3–5 days":4, "More than a week":7, "Not sure":null };
-  const days = durationMap[campaign.general.duration];
-  if(!days || campaign.tests.length === 0){
-    el.innerHTML = `<div class="empty-state" style="padding:30px 20px;">Add a test and a duration estimate to see a rough budget.</div>`;
+function renderOpenItems(campaign, isAdmin){
+  const el = document.getElementById(isAdmin ? 'acd-openitems' : 'cd-openitems');
+  if(!campaign.openItems || campaign.openItems.length === 0){
+    el.innerHTML = `<div class="empty-state" style="padding:30px 20px;">No open items right now.</div>`;
     return;
   }
-  const total = campaign.tests.reduce((sum, t) => sum + (FACILITIES[t.type].dayRate * days), 0);
+  el.innerHTML = campaign.openItems.map((item, i) => `
+    <div class="open-item ${item.done ? 'done' : ''}">
+      <input type="checkbox" ${item.done ? 'checked' : ''} ${isAdmin ? `onchange="toggleOpenItem(${i})"` : 'disabled'}>
+      <div class="txt">${item.text}</div>
+    </div>
+  `).join('');
+}
+function addOpenItem(){
+  const input = document.getElementById('acd-new-item');
+  if(!input.value.trim()) return;
+  const c = campaigns.find(x => x.id === currentCampaignId);
+  if(!c.openItems) c.openItems = [];
+  c.openItems.push({ text: input.value.trim(), done:false, addedAt: new Date().toISOString() });
+  input.value = '';
+  renderOpenItems(c, true);
+}
+function toggleOpenItem(i){
+  const c = campaigns.find(x => x.id === currentCampaignId);
+  c.openItems[i].done = !c.openItems[i].done;
+  renderOpenItems(c, true);
+}
+
+function renderTestPlanDoc(campaign, isAdmin){
+  const el = document.getElementById(isAdmin ? 'acd-plan' : 'cd-plan');
+  const g = campaign.general;
+  const testSections = campaign.tests.map(t => {
+    const f = FACILITIES[t.type];
+    const rows = f.fields.filter(fld => fld.type !== 'info').map(fld => {
+      let val = t.answers[fld.id];
+      if(Array.isArray(val)) val = val.join(', ');
+      if(val === undefined || val === '') return '';
+      return `<div class="plan-item"><div class="k">${fld.label}</div><div class="v">${val}</div></div>`;
+    }).join('');
+    return `<div class="plan-section"><h4>${f.name}</h4><div class="plan-grid">${rows}</div></div>`;
+  }).join('');
+
   el.innerHTML = `
-    <div class="estimate-box">
-      <div class="label">Rough estimate</div>
-      <div class="amount">$${total.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
-      <div class="disclaimer">Based on example day-rates (${campaign.tests.map(t=>'$'+FACILITIES[t.type].dayRate+'/day for '+FACILITIES[t.type].name).join(', ')}) × ~${days} day(s). SPRL's official recharge rate has not yet been established — replace these figures once it is.</div>
+    <div class="plan-doc" id="printable-plan">
+      <div class="doc-header">
+        <div><h2>${g.org_name || 'Untitled Campaign'} — Test Plan</h2><div class="id">${campaign.ticketId} · Generated ${new Date().toLocaleDateString()}</div></div>
+        <div class="doc-status">${statusLabel(campaign.status)}</div>
+      </div>
+      <div class="plan-section"><h4>Organization & Contact</h4><div class="plan-grid">
+        <div class="plan-item"><div class="k">Company</div><div class="v">${g.org_name || '—'}</div></div>
+        <div class="plan-item"><div class="k">Contact</div><div class="v">${g.contact_name || '—'} · ${g.contact_email || '—'} · ${g.contact_phone || '—'}</div></div>
+        <div class="plan-item"><div class="k">Requester type</div><div class="v">${g.requester_type || '—'}</div></div>
+      </div></div>
+      <div class="plan-section"><h4>Compliance</h4><div class="plan-grid">
+        <div class="plan-item"><div class="k">ITAR / export control</div><div class="v">${g.itar || '—'}</div></div>
+        <div class="plan-item"><div class="k">NDA required</div><div class="v">${g.nda || '—'}</div></div>
+      </div></div>
+      <div class="plan-section"><h4>Test Article</h4><div class="plan-grid">
+        <div class="plan-item"><div class="k">Description</div><div class="v">${g.description || '—'}</div></div>
+        <div class="plan-item"><div class="k">Materials</div><div class="v">${g.materials || '—'}</div></div>
+        <div class="plan-item"><div class="k">Pressure vessels present</div><div class="v">${g.pressure_vessels || '—'}</div></div>
+        <div class="plan-item"><div class="k">Custom interface needed</div><div class="v">${g.cables_needed || '—'}${g.cables_desc ? ' — ' + g.cables_desc : ''}</div></div>
+      </div></div>
+      <div class="plan-section"><h4>Handling & Safety</h4><div class="plan-grid">
+        <div class="plan-item"><div class="k">Handling constraints</div><div class="v">${g.handling_constraints || '—'}</div></div>
+        <div class="plan-item"><div class="k">Powered or unpowered</div><div class="v">${g.powered_state || '—'}</div></div>
+        <div class="plan-item"><div class="k">Batteries / stored energy</div><div class="v">${g.batteries || '—'}${g.batteries_desc ? ' — ' + g.batteries_desc : ''}</div></div>
+      </div></div>
+      ${testSections}
+      <div class="plan-section"><h4>Schedule</h4><div class="plan-grid">
+        <div class="plan-item"><div class="k">Preferred dates</div><div class="v">${g.date_start || '—'} to ${g.date_end || '—'} (${g.flexible || '—'})</div></div>
+        <div class="plan-item"><div class="k">Duration</div><div class="v">${g.duration || '—'}</div></div>
+        <div class="plan-item"><div class="k">Service hours</div><div class="v">${g.support247 || '—'}</div></div>
+        <div class="plan-item"><div class="k">Budget</div><div class="v">${g.budget ? '$' + g.budget : '—'}</div></div>
+      </div></div>
     </div>
   `;
+  const btnRow = document.createElement('div');
+  btnRow.innerHTML = `<button class="btn-small" style="margin-top:14px;" onclick="window.print()">Print / save as PDF</button>`;
+  el.appendChild(btnRow);
 }
 
 /* ============================================================
@@ -1077,21 +1245,27 @@ function renderAdminCampaignDetail(){
       <div class="field"><div class="hint">NDA required</div><div>${g.nda || '—'}</div></div>
       <div class="field"><div class="hint">Preferred dates</div><div>${g.date_start || '—'} to ${g.date_end || '—'} (${g.flexible || '—'})</div></div>
       <div class="field"><div class="hint">Duration / Budget</div><div>${g.duration || '—'} · $${g.budget || '—'}</div></div>
+      <div class="field"><div class="hint">Service hours</div><div>${g.support247 || '—'}</div></div>
+      <div class="field"><div class="hint">Powered / unpowered</div><div>${g.powered_state || '—'}</div></div>
+      <div class="field"><div class="hint">Batteries / stored energy</div><div>${g.batteries || '—'}</div></div>
       <div class="field"><div class="hint">Drawing uploaded</div><div>${g.drawing || 'None'}</div></div>
       <div class="field"><div class="hint">Supporting docs</div><div>${g.supporting_docs || 'None'}</div></div>
       <div class="field"><div class="hint">Reviews completed</div><div>${(g.reviews||[]).join(', ') || '—'}</div></div>
     </div>
     <div class="field" style="margin-top:16px;"><div class="hint">Test article description</div><div>${g.description || '—'}</div></div>
     <div class="field"><div class="hint">Materials list</div><div>${g.materials || '—'}</div></div>
+    <div class="field"><div class="hint">Handling constraints</div><div>${g.handling_constraints || '—'}</div></div>
   `;
   renderTestList(c, true);
   renderUpdateFeed(c, true);
   renderCalendar(c, true);
+  renderOpenItems(c, true);
+  renderTestPlanDoc(c, true);
   switchAdminTab('tests');
 }
 function switchAdminTab(tab){
   document.querySelectorAll('#view-admin-campaign-detail .dash-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
-  ['tests','updates','calendar'].forEach(t => document.getElementById('acd-tab-'+t).style.display = t===tab ? 'block' : 'none');
+  ['tests','updates','openitems','calendar','plan'].forEach(t => document.getElementById('acd-tab-'+t).style.display = t===tab ? 'block' : 'none');
 }
 function updateAdminStatus(){
   const c = campaigns.find(x => x.id === currentCampaignId);
