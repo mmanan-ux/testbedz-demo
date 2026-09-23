@@ -433,7 +433,8 @@ const FACILITIES = {
       { id:"accelerometers", label:"External accelerometer channels needed", type:"text", hint:"SPRL has a limited number of channels available — confirm your count early." },
       { id:"purpose", label:"Purpose of this test", type:"radio", options:["Data correlation","Survival test","Both"] },
       { id:"hazard", label:"If the test article were to break, could that create a hazard (e.g. hazardous material)?", type:"radio", options:["Yes","No"] },
-      { id:"hazard_desc", label:"Describe the hazard", type:"textarea", showIf:{field:"hazard", equals:"Yes"} }
+      { id:"hazard_desc", label:"Describe the hazard", type:"textarea", showIf:{field:"hazard", equals:"Yes"} },
+      { id:"material_cert", label:"I certify that the materials listed for this test article are compatible with this facility's equipment and will not cause damage to it during testing.", type:"checkbox_single" }
     ]
   },
   "small-vib": {
@@ -456,7 +457,8 @@ const FACILITIES = {
       { id:"accelerometers", label:"External accelerometer channels needed", type:"text", hint:"SPRL has a limited number of channels available — confirm your count early." },
       { id:"purpose", label:"Purpose of this test", type:"radio", options:["Data correlation","Survival test","Both"] },
       { id:"hazard", label:"If the test article were to break, could that create a hazard (e.g. hazardous material)?", type:"radio", options:["Yes","No"] },
-      { id:"hazard_desc", label:"Describe the hazard", type:"textarea", showIf:{field:"hazard", equals:"Yes"} }
+      { id:"hazard_desc", label:"Describe the hazard", type:"textarea", showIf:{field:"hazard", equals:"Yes"} },
+      { id:"material_cert", label:"I certify that the materials listed for this test article are compatible with this facility's equipment and will not cause damage to it during testing.", type:"checkbox_single" }
     ]
   },
   "blue-tvac": {
@@ -472,7 +474,8 @@ const FACILITIES = {
       { id:"feedthroughs_desc", label:"Describe the cabling / feedthrough needs", type:"textarea", showIf:{field:"feedthroughs", equals:"Yes"} },
       { id:"materials", label:"Materials list — flag any materials of concern for outgassing or contamination", type:"textarea" },
       { id:"vacuum_compatible", label:"Are all listed materials vacuum-compatible?", type:"radio", options:["Yes","No","Not sure"] },
-      { id:"support247", label:"Do you need 24/7 support during this test?", type:"radio", options:["Yes","No"] }
+      { id:"support247", label:"Do you need 24/7 support during this test?", type:"radio", options:["Yes","No"] },
+      { id:"material_cert", label:"I certify that the materials listed for this test article are compatible with this facility's equipment and will not cause damage to it during testing.", type:"checkbox_single" }
     ]
   },
   "silver-vac": {
@@ -488,7 +491,8 @@ const FACILITIES = {
       { id:"feedthroughs_desc", label:"Describe the cabling / feedthrough needs", type:"textarea", showIf:{field:"feedthroughs", equals:"Yes"} },
       { id:"materials", label:"Materials list — flag any materials of concern for outgassing or contamination", type:"textarea" },
       { id:"vacuum_compatible", label:"Are all listed materials vacuum-compatible?", type:"radio", options:["Yes","No","Not sure"] },
-      { id:"support247", label:"Do you need 24/7 support during this test?", type:"radio", options:["Yes","No"] }
+      { id:"support247", label:"Do you need 24/7 support during this test?", type:"radio", options:["Yes","No"] },
+      { id:"material_cert", label:"I certify that the materials listed for this test article are compatible with this facility's equipment and will not cause damage to it during testing.", type:"checkbox_single" }
     ]
   },
   "cincinnati": {
@@ -501,7 +505,8 @@ const FACILITIES = {
       { id:"purge", label:"Do you need a dry nitrogen purge for this test?", type:"radio", options:["Yes","No","Not sure"] },
       { id:"profile", label:"Required temperature profile (ramp rates, hold times, number of cycles)", type:"textarea" },
       { id:"powered", label:"Will the test article be powered or monitored during the test?", type:"radio", options:["Yes","No"] },
-      { id:"powered_desc", label:"Describe the instrumentation needs", type:"textarea", showIf:{field:"powered", equals:"Yes"} }
+      { id:"powered_desc", label:"Describe the instrumentation needs", type:"textarea", showIf:{field:"powered", equals:"Yes"} },
+      { id:"material_cert", label:"I certify that the materials listed for this test article are compatible with this facility's equipment and will not cause damage to it during testing.", type:"checkbox_single" }
     ]
   }
 };
@@ -558,7 +563,7 @@ const SCHEDULE_SECTION = { title:"Schedule", fields:[
   { id:"flexible", label:"Is this date flexible?", type:"radio", options:["Yes, flexible","No, fixed deadline"] },
   { id:"fixed_reason", label:"Why is this date fixed?", type:"textarea", showIf:{field:"flexible", equals:"No, fixed deadline"} },
   { id:"duration", label:"Estimated test duration", type:"select", options:["< 1 day","1–2 days","3–5 days","More than a week","Not sure"] },
-  { id:"budget", label:"Maximum budget available for this test (USD)", type:"number", hint:"Optional — helps SPRL scope the request realistically." },
+  { id:"budget", label:"Budget expectations", type:"textarea", hint:"Optional — a range or context helps SPRL scope the request realistically." },
   { id:"support247", label:"Normal SPRL service is 8 hours a day. Do you need extended hours or 24/7 access for this test?", type:"radio", options:["No, standard 8-hour service is fine","Yes, extended hours needed","Yes, 24/7 access needed"] },
   { id:"support247_desc", label:"Describe the extended hours needed", type:"textarea", showIf:{field:"support247", equals:"Yes, extended hours needed"} }
 ]};
@@ -756,6 +761,9 @@ function renderGeneralSubsection(){
     <div class="panel-title">${section.title}</div>
     <div class="panel-sub">${section.title === 'What You Need Tested' ? 'Select every facility that applies. You will answer a short technical form for each one.' : ''}</div>
     <div class="card" id="general-fields-card">
+      ${section.title === 'Compliance & Legal' ? `
+      <div class="info-block" style="margin-bottom:16px;">This request, and any resulting test agreement, is subject to the applicable policies of the University of Michigan governing the use of its facilities and equipment.</div>
+      ` : ''}
       ${section.title === 'Safety & Facility Policies' ? `
       <div class="safety-block">
         <h4>SPRL safety standards</h4>
@@ -764,6 +772,8 @@ function renderGeneralSubsection(){
           <li>ESD (electrostatic discharge) training and precautions for anyone handling ESD-sensitive hardware or entering ESD-controlled areas — SPRL staff will walk you through this before your test.</li>
           <li>Test articles and fixtures must not damage SPRL facility equipment. Customers are responsible for the cost of repair if damage occurs due to the test article, fixture, or handling.</li>
           <li>Any batteries, pressurized systems, or other stored-energy sources must be disclosed in advance (see Handling & Safety) so SPRL can plan for them safely.</li>
+          <li>Test articles must arrive bagged or with protective covers. If the article does not arrive protected and SPRL needs to provide bagging or covers, additional charges may apply.</li>
+          <li>SPRL will perform a pre-test check of the test article to confirm it appears intact and ready before testing begins.</li>
         </ul>
       </div>
       ` : ''}
@@ -944,7 +954,12 @@ function facilityStageNext(){
   const key = selectedFacilityKeys[facilityStageIndex];
   const f = FACILITIES[key];
   const body = document.getElementById('wizard-body');
-  facilityAnswers[key] = collectFieldGroup(body, f.fields);
+  const answers = collectFieldGroup(body, f.fields);
+  if(!answers.material_cert){
+    alert('Please certify that the listed materials are compatible with this facility\'s equipment before continuing.');
+    return;
+  }
+  facilityAnswers[key] = answers;
   if(facilityStageIndex < selectedFacilityKeys.length - 1){
     facilityStageIndex++;
     renderCurrentFacilityForm();
@@ -1197,7 +1212,7 @@ function renderTestPlanDoc(campaign, isAdmin){
         <div class="plan-item"><div class="k">Preferred dates</div><div class="v">${g.date_start || '—'} to ${g.date_end || '—'} (${g.flexible || '—'})</div></div>
         <div class="plan-item"><div class="k">Duration</div><div class="v">${g.duration || '—'}</div></div>
         <div class="plan-item"><div class="k">Service hours</div><div class="v">${g.support247 || '—'}</div></div>
-        <div class="plan-item"><div class="k">Budget</div><div class="v">${g.budget ? '$' + g.budget : '—'}</div></div>
+        <div class="plan-item"><div class="k">Budget expectations</div><div class="v">${g.budget || '—'}</div></div>
       </div></div>
     </div>
   `;
@@ -1244,7 +1259,8 @@ function renderAdminCampaignDetail(){
       <div class="field"><div class="hint">ITAR / export control</div><div>${g.itar || '—'}</div></div>
       <div class="field"><div class="hint">NDA required</div><div>${g.nda || '—'}</div></div>
       <div class="field"><div class="hint">Preferred dates</div><div>${g.date_start || '—'} to ${g.date_end || '—'} (${g.flexible || '—'})</div></div>
-      <div class="field"><div class="hint">Duration / Budget</div><div>${g.duration || '—'} · $${g.budget || '—'}</div></div>
+      <div class="field"><div class="hint">Duration</div><div>${g.duration || '—'}</div></div>
+      <div class="field"><div class="hint">Budget expectations</div><div>${g.budget || '—'}</div></div>
       <div class="field"><div class="hint">Service hours</div><div>${g.support247 || '—'}</div></div>
       <div class="field"><div class="hint">Powered / unpowered</div><div>${g.powered_state || '—'}</div></div>
       <div class="field"><div class="hint">Batteries / stored energy</div><div>${g.batteries || '—'}</div></div>
